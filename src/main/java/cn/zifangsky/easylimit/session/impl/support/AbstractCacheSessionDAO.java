@@ -134,7 +134,7 @@ public abstract class AbstractCacheSessionDAO implements SessionDAO {
     @Override
     public Session read(Serializable sessionId) throws UnknownSessionException {
         if (sessionId == null) {
-            throw new NullPointerException("Parameter sessionId cannot be empty.");
+            throw new IllegalArgumentException("Parameter sessionId cannot be empty.");
         }
 
         //先从本地获取，如果没有则从缓存获取
@@ -154,7 +154,7 @@ public abstract class AbstractCacheSessionDAO implements SessionDAO {
     @Override
     public void update(Session session) throws UnknownSessionException {
         if (session == null) {
-            throw new NullPointerException("Parameter session cannot be empty.");
+            throw new IllegalArgumentException("Parameter session cannot be empty.");
         }
 
         //先更新本地，再更新缓存中的数据
@@ -170,7 +170,7 @@ public abstract class AbstractCacheSessionDAO implements SessionDAO {
     @Override
     public void delete(Session session) {
         if (session == null) {
-            throw new NullPointerException("Parameter session cannot be empty.");
+            throw new IllegalArgumentException("Parameter session cannot be empty.");
         }
 
         //先本地删除，再删除缓存中的数据

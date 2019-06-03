@@ -35,7 +35,7 @@ public class MemorySessionDAO implements SessionDAO {
     @Override
     public Session read(Serializable sessionId) throws UnknownSessionException {
         if (sessionId == null) {
-            throw new NullPointerException("Parameter sessionId cannot be empty.");
+            throw new IllegalArgumentException("Parameter sessionId cannot be empty.");
         }
 
         Session session = sessionStorageMap.get(sessionId);
@@ -49,7 +49,7 @@ public class MemorySessionDAO implements SessionDAO {
     @Override
     public void update(Session session) throws UnknownSessionException {
         if (session == null) {
-            throw new NullPointerException("Parameter session cannot be empty.");
+            throw new IllegalArgumentException("Parameter session cannot be empty.");
         }
 
         sessionStorageMap.put(session.getId(), session);
@@ -58,7 +58,7 @@ public class MemorySessionDAO implements SessionDAO {
     @Override
     public void delete(Session session) {
         if (session == null) {
-            throw new NullPointerException("Parameter session cannot be empty.");
+            throw new IllegalArgumentException("Parameter session cannot be empty.");
         }
 
         sessionStorageMap.remove(session.getId());
