@@ -5,6 +5,8 @@ import cn.zifangsky.easylimit.exception.cache.CacheException;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,7 +42,7 @@ public class DefaultMemoryCache implements Cache<Serializable, Object> {
 
         //数据Map
         ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
-        return dataMap.get(key);
+        return dataMap != null ? dataMap.get(key) : null;
     }
 
     @Override
@@ -54,10 +56,23 @@ public class DefaultMemoryCache implements Cache<Serializable, Object> {
 
         //数据Map
         ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
+        this.initialize(cacheName, dataMap);
+
         if(value != null){
             dataMap.put(key, value);
         }else{
             dataMap.remove(key);
+        }
+    }
+
+    @Override
+    public void putAll(String cacheName, Map<Serializable, Object> sources) throws CacheException {
+        //数据Map
+        ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
+        this.initialize(cacheName, dataMap);
+
+        if(sources != null && sources.size() > 0){
+            dataMap.putAll(sources);
         }
     }
 
@@ -72,7 +87,9 @@ public class DefaultMemoryCache implements Cache<Serializable, Object> {
 
         //数据Map
         ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
-        dataMap.remove(key);
+        if(dataMap != null){
+            dataMap.remove(key);
+        }
     }
 
     @Override
@@ -83,7 +100,9 @@ public class DefaultMemoryCache implements Cache<Serializable, Object> {
 
         //数据Map
         ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
-        dataMap.clear();
+        if(dataMap != null){
+            dataMap.clear();
+        }
     }
 
     @Override
@@ -94,7 +113,7 @@ public class DefaultMemoryCache implements Cache<Serializable, Object> {
 
         //数据Map
         ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
-        return dataMap.size();
+        return dataMap != null ? dataMap.size() : 0;
     }
 
     @Override
@@ -105,7 +124,7 @@ public class DefaultMemoryCache implements Cache<Serializable, Object> {
 
         //数据Map
         ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
-        return dataMap.keySet();
+        return dataMap != null ? dataMap.keySet() : Collections.emptySet();
     }
 
     @Override
@@ -116,6 +135,16 @@ public class DefaultMemoryCache implements Cache<Serializable, Object> {
 
         //数据Map
         ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
-        return dataMap.values();
+        return dataMap != null ? dataMap.values() : Collections.emptyList();
+    }
+
+    /**
+     * 初始化
+     */
+    private void initialize(String cacheName, ConcurrentHashMap<Serializable, Object> dataMap) {
+        if(dataMap == null){
+            dataMap = new ConcurrentHashMap<>();
+            memoryCacheMap.put(cacheName, dataMap);
+        }
     }
 }

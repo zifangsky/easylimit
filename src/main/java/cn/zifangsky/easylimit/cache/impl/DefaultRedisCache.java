@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -60,6 +61,13 @@ public class DefaultRedisCache implements Cache<Serializable, Object> {
             opsForHash.put(cacheName, key.toString(), value);
         }else{
             opsForHash.delete(cacheName, key.toString());
+        }
+    }
+
+    @Override
+    public void putAll(String cacheName, Map<Serializable, Object> sources) throws CacheException {
+        if(sources != null && sources.size() > 0){
+            opsForHash.putAll(cacheName, sources);
         }
     }
 

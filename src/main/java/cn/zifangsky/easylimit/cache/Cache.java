@@ -3,6 +3,7 @@ package cn.zifangsky.easylimit.cache;
 import cn.zifangsky.easylimit.exception.cache.CacheException;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -38,6 +39,18 @@ public interface Cache<K, V> {
      * @since 1.0.0
      */
     void put(String cacheName, K key, V value) throws CacheException;
+
+    /**
+     * PUT ALL方法
+     *
+     * @param cacheName 键值对所属的缓存集合名称
+     * @param sources  所有待保存的键值对
+     * @throws CacheException CacheException
+     * @author zifangsky
+     * @date 2019/4/1 17:21
+     * @since 1.0.0
+     */
+    void putAll(String cacheName, Map<K,V> sources) throws CacheException;
 
     /**
      * REMOVE方法
