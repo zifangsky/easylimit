@@ -33,7 +33,15 @@ public enum DefaultTokenRespEnums {
     /**
      * 没有权限
      */
-    NO_PERMISSIONS(403, "您当前没有权限访问该地址！")
+    NO_PERMISSIONS(403, "您当前没有权限访问该地址！"),
+    /**
+     * 不可用的TOKEN
+     */
+    INVALID_TOKEN(401,"请求的Access Token或Refresh Token不可用！"),
+    /**
+     * TOKEN过期
+     */
+    EXPIRED_TOKEN(403,"请求的Access Token或Refresh Token已过期！")
     ;
 
     DefaultTokenRespEnums(int code, String msg) {

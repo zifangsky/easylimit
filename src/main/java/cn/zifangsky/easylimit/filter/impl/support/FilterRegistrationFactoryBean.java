@@ -5,6 +5,7 @@ import cn.zifangsky.easylimit.common.Constants;
 import cn.zifangsky.easylimit.enums.ProjectModeEnums;
 import cn.zifangsky.easylimit.exception.EasyLimitException;
 import cn.zifangsky.easylimit.filter.AbstractAccessControlFilter;
+import cn.zifangsky.easylimit.filter.AbstractAdviceFilter;
 import cn.zifangsky.easylimit.filter.AbstractFilter;
 import cn.zifangsky.easylimit.filter.AbstractVerifyFilter;
 import cn.zifangsky.easylimit.filter.FilterChainManager;
@@ -208,8 +209,7 @@ public class FilterRegistrationFactoryBean implements FactoryBean<AbstractProxie
         this.applyLogoutRedirectUrlIfNecessary(filter);
 
         //2. 如果是Token模式，则还需要设置某个别filter需要的返回提示信息
-        //TODO
-
+        this.applyTokenResponseIfNecessary(filter);
     }
 
     /**
@@ -227,6 +227,16 @@ public class FilterRegistrationFactoryBean implements FactoryBean<AbstractProxie
         }
         if(StringUtils.isNoneBlank(this.logoutRedirectUrl)){
             filterChainMap.put(this.logoutRedirectUrl, new String[]{DefaultFilterEnums.ANONYMOUS.getFilterName()});
+        }
+    }
+
+    /**
+     * 给{@link AbstractAdviceFilter}设置项目模式
+     */
+    private void applyTokenResponseIfNecessary(Filter filter){
+        if(ProjectModeEnums.TOKEN.equals(this.projectMode) && (filter instanceof AbstractAdviceFilter)){
+            AbstractAdviceFilter abstractAdviceFilter = (AbstractAdviceFilter) filter;
+            abstractAdviceFilter.setProjectMode(this.projectMode);
         }
     }
 

@@ -1,8 +1,6 @@
 package cn.zifangsky.easylimit.filter;
 
 import cn.zifangsky.easylimit.enums.ProjectModeEnums;
-import cn.zifangsky.easylimit.filter.impl.support.TokenRespMsg;
-import cn.zifangsky.easylimit.utils.JsonUtils;
 import cn.zifangsky.easylimit.utils.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 登录、角色、权限等业务功能的抽象{@link Filter}
@@ -112,19 +108,6 @@ public abstract class AbstractAdviceFilter extends AbstractOncePerRequestFilter{
      */
     protected void doRedirect(HttpServletRequest request, HttpServletResponse response, String redirectUrl) throws IOException {
         WebUtils.executeRedirect(request, response, redirectUrl);
-    }
-
-    /**
-     * 组装基于Token请求的返回
-     */
-    protected void generateTokenResponse(HttpServletResponse response, TokenRespMsg tokenRespMsg) throws Exception {
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-type", "application/json;charset=UTF-8");
-        Map<String,Object> result = new HashMap<>(2);
-        result.put("code", tokenRespMsg.getCode());
-        result.put("msg", tokenRespMsg.getMsg());
-
-        response.getWriter().write(JsonUtils.toJson(result));
     }
 
     public ProjectModeEnums getProjectMode() {

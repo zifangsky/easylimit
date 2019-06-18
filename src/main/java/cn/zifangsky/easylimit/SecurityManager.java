@@ -48,7 +48,7 @@ public interface SecurityManager extends Realm{
      * @param accessContext accessContext
      * @return cn.zifangsky.easylimit.access.Access
      */
-    Access createAccess(AccessContext accessContext);
+    Access createAccess(AccessContext accessContext) throws Exception;
 
     /**
      * 通过{@link SessionKey}获取{@link Session}

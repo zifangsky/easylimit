@@ -154,7 +154,7 @@ public abstract class AbstractValidationSessionManager extends AbstractSessionMa
      * @since 1.0.0
      */
     protected void onExpiration(Session session, SessionKey key) {
-        LOGGER.info(MessageFormat.format("Session with id [{0}] has expired.", key));
+        LOGGER.info(MessageFormat.format("Session with id [{0}] has expired.", key.getSessionId()));
         try {
             //1. 更新状态
             this.storeSession(session);
@@ -183,7 +183,7 @@ public abstract class AbstractValidationSessionManager extends AbstractSessionMa
         }
 
         //其他情况
-        LOGGER.info(MessageFormat.format("Session with id [{0}] is invalid.", key));
+        LOGGER.info(MessageFormat.format("Session with id [{0}] is invalid.", key.getSessionId()));
         try {
             //1. 更新状态
             this.storeSession(session);

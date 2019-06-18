@@ -84,9 +84,7 @@ public class CookieWebSessionManager extends AbstractWebSessionManager {
     }
 
     @Override
-    protected void afterStopped(Session session) {
-        super.afterStopped(session);
-
+    protected void doStopped(Session session) {
         //1. 获取request和response
         HttpServletRequest request = SpringContextUtils.getRequest();
         HttpServletResponse response = SpringContextUtils.getResponse();
@@ -100,9 +98,7 @@ public class CookieWebSessionManager extends AbstractWebSessionManager {
     }
 
     @Override
-    protected void afterExpired(Session session) {
-        super.afterExpired(session);
-
+    protected void doExpired(Session session) {
         //1. 获取request和response
         HttpServletRequest request = SpringContextUtils.getRequest();
         HttpServletResponse response = SpringContextUtils.getResponse();
@@ -123,7 +119,7 @@ public class CookieWebSessionManager extends AbstractWebSessionManager {
      * @param request request
      * @return java.io.Serializable
      */
-    private Serializable getCookieSessionId(HttpServletRequest request){
+    protected Serializable getCookieSessionId(HttpServletRequest request){
         //1. 从从Cookie获取sessionId
         String id = CookieUtils.getCookieValue(request, this.sessionIdCookieInfo.getName());
 
@@ -144,7 +140,7 @@ public class CookieWebSessionManager extends AbstractWebSessionManager {
      * @param request request
      * @param response response
      */
-    private void storeCookieSessionId(Serializable sessionId, HttpServletRequest request, HttpServletResponse response){
+    protected void storeCookieSessionId(Serializable sessionId, HttpServletRequest request, HttpServletResponse response){
         String cookieName = this.sessionIdCookieInfo.getName();
         String cookieValue = sessionId.toString();
         String domain = this.sessionIdCookieInfo.getDomain();
@@ -165,7 +161,7 @@ public class CookieWebSessionManager extends AbstractWebSessionManager {
      * @param request request
      * @param response response
      */
-    private void removeCookieSessionId(HttpServletRequest request, HttpServletResponse response){
+    protected void removeCookieSessionId(HttpServletRequest request, HttpServletResponse response){
         //删除cookie
         CookieUtils.delCookie(request, response, this.sessionIdCookieInfo.getName());
     }

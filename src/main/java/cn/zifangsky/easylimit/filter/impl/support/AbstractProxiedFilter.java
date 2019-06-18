@@ -62,7 +62,7 @@ public abstract class AbstractProxiedFilter extends AbstractOncePerRequestFilter
      * @param response HttpServletResponse
      * @return cn.zifangsky.easylimit.access.Access
      */
-    protected Access createAccess(HttpServletRequest request, HttpServletResponse response){
+    protected Access createAccess(HttpServletRequest request, HttpServletResponse response) throws Exception{
         return new Access.Builder(this.securityManager, request, response).build();
     }
 

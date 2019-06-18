@@ -20,7 +20,16 @@ public enum DefaultTimeEnums {
     /**
      * {@link Session}的默认校验频率（30分钟）
      */
-    SESSION_VALIDATION(30, ChronoUnit.MINUTES, TimeUnit.MINUTES);
+    SESSION_VALIDATION(30, ChronoUnit.MINUTES, TimeUnit.MINUTES),
+    /**
+     * Access Token的默认有效期为1天
+     */
+    ACCESS_TOKEN(1, ChronoUnit.DAYS, TimeUnit.DAYS),
+    /**
+     * Refresh Token的默认有效期为180天
+     */
+    REFRESH_TOKEN(180, ChronoUnit.DAYS, TimeUnit.DAYS)
+    ;
 
     private long time;
 

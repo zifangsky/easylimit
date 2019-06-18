@@ -1,5 +1,7 @@
 package cn.zifangsky.easylimit.filter;
 
+import cn.zifangsky.easylimit.filter.impl.support.TokenRespMsg;
+import cn.zifangsky.easylimit.utils.JsonUtils;
 import cn.zifangsky.easylimit.utils.WebUtils;
 
 import javax.servlet.Filter;
@@ -10,6 +12,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * {@link Filter}的基本实现
@@ -97,5 +101,18 @@ public abstract class AbstractOncePerRequestFilter extends AbstractFilter{
      */
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return false;
+    }
+
+    /**
+     * 组装基于Token请求的返回
+     */
+    protected void generateTokenResponse(HttpServletResponse response, TokenRespMsg tokenRespMsg) throws Exception {
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Content-type", "application/json;charset=UTF-8");
+        Map<String,Object> result = new HashMap<>(2);
+        result.put("code", tokenRespMsg.getCode());
+        result.put("msg", tokenRespMsg.getMsg());
+
+        response.getWriter().write(JsonUtils.toJson(result));
     }
 }

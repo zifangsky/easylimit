@@ -6,7 +6,7 @@
 	<groupId>cn.zifangsky</groupId>
 	<artifactId>easylimit</artifactId>
     <packaging>jar</packaging>
-	<version>0.9.0-SNAPSHOT</version>
+	<version>0.9.1-SNAPSHOT</version>
 
 	<name>Easy Limit</name>
 	<description>一个简单的权限控制框架</description>

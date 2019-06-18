@@ -26,10 +26,10 @@ import java.text.MessageFormat;
 import java.util.Collection;
 
 /**
- * 默认的
+ * 默认的{@link SecurityManager}
  *
  * @author zifangsky
- * @date 2019/4/8 0008
+ * @date 2019/4/8
  * @since 1.0.0
  */
 public class DefaultWebSecurityManager implements SecurityManager{

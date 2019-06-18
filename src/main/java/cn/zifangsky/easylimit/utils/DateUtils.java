@@ -139,6 +139,18 @@ public class DateUtils {
     /**
      * 根据Instant返回精确到秒的时间戳
      *
+     * @return java.lang.Long
+     * @author zifangsky
+     * @date 2018/7/30 13:23
+     * @since 1.0.0
+     */
+    public static Long getSecondTimestamp(LocalDateTime localDateTime, ZoneOffset zoneOffset) {
+        return toInstant(localDateTime, zoneOffset).getEpochSecond();
+    }
+
+    /**
+     * 根据Instant返回精确到秒的时间戳
+     *
      * @param instant 指定的Instant
      * @return java.lang.Long
      * @author zifangsky

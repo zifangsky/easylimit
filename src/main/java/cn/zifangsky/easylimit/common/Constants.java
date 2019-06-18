@@ -54,4 +54,23 @@ public class Constants {
     public static final String DEFAULT_LOGOUT_REDIRECT_URL = DEFAULT_LOGIN_URL;
 
 
+    /**
+     * 默认的Access Token的参数名
+     */
+    public static final String DEFAULT_ACCESS_TOKEN_PARAM_NAME = "access_token";
+
+    /**
+     * 默认的Refresh Token的参数名
+     */
+    public static final String DEFAULT_REFRESH_TOKEN_PARAM_NAME = "refresh_token";
+
+    /**
+     * 默认的Access Token的过期时间的参数名
+     */
+    public static final String DEFAULT_EXPIRES_IN_PARAM_NAME = "expires_in";
+
+
+
+
+
 }

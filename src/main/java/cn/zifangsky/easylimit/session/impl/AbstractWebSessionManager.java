@@ -112,18 +112,39 @@ public abstract class AbstractWebSessionManager extends AbstractValidationSessio
 
     @Override
     protected void afterStopped(Session session) {
-        if (deleteInvalidSessions) {
-            this.deleteSession(session);
+        try {
+            this.doStopped(session);
+        }finally {
+            if (deleteInvalidSessions) {
+                this.deleteSession(session);
+            }
         }
+    }
+
+    /**
+     * 用于子类重写以便在删除session之前做点其他操作
+     */
+    protected void doStopped(Session session) {
+
     }
 
     @Override
     protected void afterExpired(Session session) {
-        if (deleteInvalidSessions) {
-            this.deleteSession(session);
+        try {
+            this.doExpired(session);
+        }finally {
+            if (deleteInvalidSessions) {
+                this.deleteSession(session);
+            }
         }
     }
 
+    /**
+     * 用于子类重写以便在删除session之前做点其他操作
+     */
+    protected void doExpired(Session session) {
+
+    }
 
     public SessionIdFactory getSessionIdFactory() {
         return sessionIdFactory;

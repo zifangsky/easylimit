@@ -39,12 +39,6 @@ public class SecurityUtils {
     }
 
     public static Access getAccess() {
-        Access access = ThreadContext.getAccess();
-
-        //如果ThreadLocal中没有，则存储一份默认的
-        if(access == null){
-            //TODO 默认的
-        }
-        return access;
+        return ThreadContext.getAccess();
     }
 }

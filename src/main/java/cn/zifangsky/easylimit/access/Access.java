@@ -293,59 +293,44 @@ public interface Access {
          * SecurityManager
          */
         private SecurityManager securityManager;
-        /**
-         * ServletRequest
-         */
-        private ServletRequest servletRequest;
-        /**
-         * ServletResponse
-         */
-        private ServletResponse servletResponse;
 
         public Builder(ServletRequest servletRequest, ServletResponse servletResponse) {
             this(SecurityUtils.getSecurityManager(), servletRequest, servletResponse);
         }
 
         public Builder(SecurityManager securityManager, ServletRequest servletRequest, ServletResponse servletResponse) {
+            this(securityManager, new DefaultAccessContext(), servletRequest, servletResponse);
+        }
+
+        public Builder(SecurityManager securityManager, AccessContext accessContext, ServletRequest servletRequest, ServletResponse servletResponse) {
+            if(securityManager == null){
+                throw new IllegalArgumentException("Parameter securityManager cannot be empty.");
+            }
+            if(accessContext == null){
+                throw new IllegalArgumentException("Parameter accessContext cannot be empty.");
+            }
             if(servletRequest == null){
                 throw new IllegalArgumentException("Parameter servletRequest cannot be empty.");
             }
             if(servletResponse == null){
                 throw new IllegalArgumentException("Parameter servletResponse cannot be empty.");
             }
-            if(securityManager == null){
-                throw new IllegalArgumentException("Parameter securityManager cannot be empty.");
-            }
 
             this.securityManager = securityManager;
-            this.servletRequest = servletRequest;
-            this.servletResponse = servletResponse;
+            this.accessContext = accessContext;
 
             //初始化AccessContext
-            this.accessContext = this.createAccessContext();
             this.accessContext.setSecurityManager(securityManager);
             this.accessContext.setServletRequest(servletRequest);
             this.accessContext.setServletResponse(servletResponse);
         }
 
         /**
-         * 初始化{@link AccessContext}实例
-         * @author zifangsky
-         * @date 2019/4/8 14:26
-         * @since 1.0.0
-         * @return cn.zifangsky.easylimit.access.AccessContext
-         */
-        protected AccessContext createAccessContext(){
-            return new DefaultAccessContext();
-        }
-
-        /**
          * 通过{@link AccessContext}创建{@link Access}实例
          */
-        public Access build(){
+        public Access build() throws Exception{
             return this.securityManager.createAccess(this.accessContext);
         }
-
     }
 
 }
