@@ -92,13 +92,21 @@ public abstract class AbstractAdviceFilter extends AbstractOncePerRequestFilter{
             this.afterCompletion(request, response, exception);
             LOGGER.debug(MessageFormat.format("The afterCompletion method for [{0} filter] has been executed.", this.getFilterName()));
         } catch (Exception e) {
-            if(e instanceof ServletException){
-                throw (ServletException)e;
-            }else if(e instanceof IOException){
-                throw (IOException)e;
+            LOGGER.error("The afterCompletion method threw an exception.", e);
+
+            if(exception == null){
+                exception = e;
+            }
+        }
+
+        if(exception != null){
+            if(exception instanceof ServletException){
+                throw (ServletException)exception;
+            }else if(exception instanceof IOException){
+                throw (IOException)exception;
             }else{
-                LOGGER.error("Filter returns an unexpected exception during execution.", e);
-                throw new ServletException(e);
+                LOGGER.error("Filter returns an unexpected exception during execution.", exception);
+                throw new ServletException(exception);
             }
         }
     }
