@@ -58,10 +58,12 @@ public abstract class AbstractAuthenticationRealm implements Realm{
         if(principalInfoCache != null){
             this.enablePrincipalInfoCache = true;
             this.principalInfoCache = principalInfoCache;
-        }
 
-        if(principalInfoCacheName != null){
-            this.principalInfoCacheName = principalInfoCacheName;
+            if(principalInfoCacheName != null){
+                this.principalInfoCacheName = principalInfoCacheName;
+            }else{
+                this.principalInfoCacheName = DEFAULT_PRINCIPAL_INFO_CACHE_NAME;
+            }
         }
     }
 

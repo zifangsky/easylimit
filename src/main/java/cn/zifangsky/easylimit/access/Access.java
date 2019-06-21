@@ -1,11 +1,14 @@
 package cn.zifangsky.easylimit.access;
 
+import cn.zifangsky.easylimit.SecurityManager;
 import cn.zifangsky.easylimit.access.impl.DefaultAccessContext;
 import cn.zifangsky.easylimit.authc.PrincipalInfo;
 import cn.zifangsky.easylimit.authc.ValidatedInfo;
 import cn.zifangsky.easylimit.exception.authc.AuthenticationException;
+import cn.zifangsky.easylimit.exception.authc.NoPermissionException;
+import cn.zifangsky.easylimit.exception.authc.NoRoleException;
+import cn.zifangsky.easylimit.exception.authc.NotLoginException;
 import cn.zifangsky.easylimit.session.Session;
-import cn.zifangsky.easylimit.SecurityManager;
 import cn.zifangsky.easylimit.utils.SecurityUtils;
 
 import javax.servlet.ServletRequest;
@@ -177,6 +180,125 @@ public interface Access {
      * @since 1.0.0
      */
     boolean hasAllRoles(Collection<String> roles);
+
+    /**
+     * 判断是否存在用户主体信息
+     * @author zifangsky
+     * @date 2019/4/3 14:45
+     * @since 1.0.0
+     * @throws NotLoginException 未登录异常
+     */
+    void checkPrincipal() throws NotLoginException;
+
+    /**
+     * 判断是否拥有某个权限
+     *
+     * @param permission 权限CODE
+     * @throws NoPermissionException 没有某个权限的异常
+     * @author zifangsky
+     * @date 2019/4/3 14:45
+     * @since 1.0.0
+     */
+    void checkPermission(String permission) throws NoPermissionException;
+
+    /**
+     * 判断是否拥有其中某个权限
+     *
+     * @param permissions 所有可能的权限CODE
+     * @throws NoPermissionException 没有某个权限的异常
+     * @author zifangsky
+     * @date 2019/4/3 14:50
+     * @since 1.0.0
+     */
+    void checkAnyPermissions(String... permissions) throws NoPermissionException;
+
+    /**
+     * 判断是否拥有其中某个权限
+     *
+     * @param permissions 所有可能的权限CODE
+     * @throws NoPermissionException 没有某个权限的异常
+     * @author zifangsky
+     * @date 2019/4/3 14:50
+     * @since 1.0.0
+     */
+    void checkAnyPermissions(Collection<String> permissions) throws NoPermissionException;
+
+    /**
+     * 判断是否拥有其中所有权限
+     *
+     * @param permissions 所有可能的权限CODE
+     * @throws NoPermissionException 没有某个权限的异常
+     * @author zifangsky
+     * @date 2019/4/3 14:50
+     * @since 1.0.0
+     */
+    void checkAllPermissions(String... permissions) throws NoPermissionException;
+
+    /**
+     * 判断是否拥有其中所有权限
+     *
+     * @param permissions 所有可能的权限CODE
+     * @throws NoPermissionException 没有某个权限的异常
+     * @author zifangsky
+     * @date 2019/4/3 14:50
+     * @since 1.0.0
+     */
+    void checkAllPermissions(Collection<String> permissions) throws NoPermissionException;
+
+    /**
+     * 判断是否拥有某个角色
+     *
+     * @param role 角色CODE
+     * @throws NoRoleException 没有某个角色的异常
+     * @author zifangsky
+     * @date 2019/4/3 15:19
+     * @since 1.0.0
+     */
+    void checkRole(String role) throws NoRoleException;
+
+    /**
+     * 判断是否拥有其中某个角色
+     *
+     * @param roles 所有可能的角色CODE
+     * @throws NoRoleException 没有某个角色的异常
+     * @author zifangsky
+     * @date 2019/4/3 15:19
+     * @since 1.0.0
+     */
+    void checkAnyRoles(String... roles) throws NoRoleException;
+
+    /**
+     * 判断是否拥有其中某个角色
+     *
+     * @param roles 所有可能的角色CODE
+     * @throws NoRoleException 没有某个角色的异常
+     * @author zifangsky
+     * @date 2019/4/3 15:19
+     * @since 1.0.0
+     */
+    void checkAnyRoles(Collection<String> roles) throws NoRoleException;
+
+    /**
+     * 判断是否拥有其中所有角色
+     *
+     * @param roles 所有可能的角色CODE
+     * @throws NoRoleException 没有某个角色的异常
+     * @author zifangsky
+     * @date 2019/4/3 15:19
+     * @since 1.0.0
+     */
+    void checkAllRoles(String... roles) throws NoRoleException;
+
+    /**
+     * 判断是否拥有其中所有角色
+     *
+     * @param roles 所有可能的角色CODE
+     * @throws NoRoleException 没有某个角色的异常
+     * @author zifangsky
+     * @date 2019/4/3 15:19
+     * @since 1.0.0
+     */
+    void checkAllRoles(Collection<String> roles) throws NoRoleException;
 
     /**
      * 登录认证

@@ -1,18 +1,19 @@
 package cn.zifangsky.easylimit.access.impl;
 
+import cn.zifangsky.easylimit.SecurityManager;
 import cn.zifangsky.easylimit.access.Access;
 import cn.zifangsky.easylimit.access.impl.support.AccessCallable;
 import cn.zifangsky.easylimit.access.impl.support.AccessRunnable;
 import cn.zifangsky.easylimit.authc.PrincipalInfo;
 import cn.zifangsky.easylimit.authc.ValidatedInfo;
-import cn.zifangsky.easylimit.exception.authc.AuthenticationException;
-import cn.zifangsky.easylimit.SecurityManager;
-import cn.zifangsky.easylimit.session.Session;
 import cn.zifangsky.easylimit.exception.access.ExecutionException;
+import cn.zifangsky.easylimit.exception.authc.AuthenticationException;
+import cn.zifangsky.easylimit.exception.authc.NoPermissionException;
+import cn.zifangsky.easylimit.exception.authc.NoRoleException;
+import cn.zifangsky.easylimit.exception.authc.NotLoginException;
+import cn.zifangsky.easylimit.session.Session;
 import cn.zifangsky.easylimit.session.SessionContext;
 import cn.zifangsky.easylimit.session.impl.DefaultSessionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -27,8 +28,6 @@ import java.util.concurrent.Callable;
  * @since 1.0.0
  */
 public class ExposedAccess implements Access{
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExposedAccess.class);
-
     /**
      * ServletRequest
      */
@@ -195,6 +194,73 @@ public class ExposedAccess implements Access{
     public boolean hasAllRoles(Collection<String> roles) {
         return this.hasPrincipal() &&
                 securityManager.hasAllRoles(this.principalInfo, roles);
+    }
+
+    @Override
+    public void checkPrincipal() throws NotLoginException {
+        if(!this.authenticated || !this.hasPrincipal()){
+            throw new NotLoginException("Currently access is not logged in, and there is no user principal information.");
+        }
+    }
+
+    @Override
+    public void checkPermission(String permission) throws NoPermissionException {
+        this.checkPrincipal();
+        securityManager.checkPermission(this.principalInfo, permission);
+    }
+
+    @Override
+    public void checkAnyPermissions(String... permissions) throws NoPermissionException {
+        this.checkPrincipal();
+        securityManager.checkAnyPermissions(this.principalInfo, permissions);
+    }
+
+    @Override
+    public void checkAnyPermissions(Collection<String> permissions) throws NoPermissionException {
+        this.checkPrincipal();
+        securityManager.checkAnyPermissions(this.principalInfo, permissions);
+    }
+
+    @Override
+    public void checkAllPermissions(String... permissions) throws NoPermissionException {
+        this.checkPrincipal();
+        securityManager.checkAllPermissions(this.principalInfo, permissions);
+    }
+
+    @Override
+    public void checkAllPermissions(Collection<String> permissions) throws NoPermissionException {
+        this.checkPrincipal();
+        securityManager.checkAllPermissions(this.principalInfo, permissions);
+    }
+
+    @Override
+    public void checkRole(String role) throws NoRoleException {
+        this.checkPrincipal();
+        securityManager.checkRole(this.principalInfo, role);
+    }
+
+    @Override
+    public void checkAnyRoles(String... roles) throws NoRoleException {
+        this.checkPrincipal();
+        securityManager.checkAnyRoles(this.principalInfo, roles);
+    }
+
+    @Override
+    public void checkAnyRoles(Collection<String> roles) throws NoRoleException {
+        this.checkPrincipal();
+        securityManager.checkAnyRoles(this.principalInfo, roles);
+    }
+
+    @Override
+    public void checkAllRoles(String... roles) throws NoRoleException {
+        this.checkPrincipal();
+        securityManager.checkAllRoles(this.principalInfo, roles);
+    }
+
+    @Override
+    public void checkAllRoles(Collection<String> roles) throws NoRoleException {
+        this.checkPrincipal();
+        securityManager.checkAllRoles(this.principalInfo, roles);
     }
 
     @Override

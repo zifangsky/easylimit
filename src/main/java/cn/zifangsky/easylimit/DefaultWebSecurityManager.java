@@ -8,6 +8,8 @@ import cn.zifangsky.easylimit.access.impl.DefaultAccessFactory;
 import cn.zifangsky.easylimit.authc.PrincipalInfo;
 import cn.zifangsky.easylimit.authc.ValidatedInfo;
 import cn.zifangsky.easylimit.exception.authc.AuthenticationException;
+import cn.zifangsky.easylimit.exception.authc.NoPermissionException;
+import cn.zifangsky.easylimit.exception.authc.NoRoleException;
 import cn.zifangsky.easylimit.exception.session.SessionException;
 import cn.zifangsky.easylimit.permission.PermissionInfo;
 import cn.zifangsky.easylimit.realm.Realm;
@@ -380,6 +382,56 @@ public class DefaultWebSecurityManager implements SecurityManager{
     @Override
     public boolean hasAllRoles(PrincipalInfo principalInfo, Collection<String> roles) {
         return this.realm.hasAllRoles(principalInfo, roles);
+    }
+
+    @Override
+    public void checkPermission(PrincipalInfo principalInfo, String permission) throws NoPermissionException {
+        this.realm.checkPermission(principalInfo, permission);
+    }
+
+    @Override
+    public void checkAnyPermissions(PrincipalInfo principalInfo, String... permissions) throws NoPermissionException {
+        this.realm.checkAnyPermissions(principalInfo, permissions);
+    }
+
+    @Override
+    public void checkAnyPermissions(PrincipalInfo principalInfo, Collection<String> permissions) throws NoPermissionException {
+        this.realm.checkAnyPermissions(principalInfo, permissions);
+    }
+
+    @Override
+    public void checkAllPermissions(PrincipalInfo principalInfo, String... permissions) throws NoPermissionException {
+        this.realm.checkAllPermissions(principalInfo, permissions);
+    }
+
+    @Override
+    public void checkAllPermissions(PrincipalInfo principalInfo, Collection<String> permissions) throws NoPermissionException {
+        this.realm.checkAllPermissions(principalInfo, permissions);
+    }
+
+    @Override
+    public void checkRole(PrincipalInfo principalInfo, String role) throws NoRoleException {
+        this.realm.checkRole(principalInfo, role);
+    }
+
+    @Override
+    public void checkAnyRoles(PrincipalInfo principalInfo, String... roles) throws NoRoleException {
+        this.realm.checkAnyRoles(principalInfo, roles);
+    }
+
+    @Override
+    public void checkAnyRoles(PrincipalInfo principalInfo, Collection<String> roles) throws NoRoleException {
+        this.realm.checkAnyRoles(principalInfo, roles);
+    }
+
+    @Override
+    public void checkAllRoles(PrincipalInfo principalInfo, String... roles) throws NoRoleException {
+        this.realm.checkAllRoles(principalInfo, roles);
+    }
+
+    @Override
+    public void checkAllRoles(PrincipalInfo principalInfo, Collection<String> roles) throws NoRoleException {
+        this.realm.checkAllRoles(principalInfo, roles);
     }
 
     @Override

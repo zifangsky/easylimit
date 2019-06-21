@@ -6,7 +6,7 @@
 	<groupId>cn.zifangsky</groupId>
 	<artifactId>easylimit</artifactId>
     <packaging>jar</packaging>
-	<version>0.9.1-SNAPSHOT</version>
+	<version>0.9.2-SNAPSHOT</version>
 
 	<name>Easy Limit</name>
 	<description>一个简单的权限控制框架</description>
@@ -36,6 +36,8 @@
 		<jackson>2.9.8</jackson>
 		<!-- SLF4J -->
 		<slf4j>1.7.26</slf4j>
+        <!-- AspectJ Weaver -->
+        <aspectjweaver>1.9.4</aspectjweaver>
 		<!-- Java Servlet API -->
 		<javax.servlet-api>4.0.1</javax.servlet-api>
         <!-- Spring Web MVC -->
@@ -121,6 +123,13 @@
             <version>${slf4j}</version>
         </dependency>
 
+        <!-- AspectJ Weaver -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectjweaver}</version>
+        </dependency>
+
         <!-- Java Servlet API -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -152,6 +161,7 @@
             <artifactId>jedis</artifactId>
             <version>${jedis}</version>
         </dependency>
+
         <!-- Spring Data Redis -->
         <dependency>
             <groupId>org.springframework.data</groupId>

@@ -3,7 +3,9 @@ package cn.zifangsky.easylimit.realm.impl;
 import cn.zifangsky.easylimit.authc.PrincipalInfo;
 import cn.zifangsky.easylimit.cache.Cache;
 import cn.zifangsky.easylimit.common.Constants;
+import cn.zifangsky.easylimit.exception.authc.NoPermissionException;
 import cn.zifangsky.easylimit.exception.authc.NoPermissionInfoException;
+import cn.zifangsky.easylimit.exception.authc.NoRoleException;
 import cn.zifangsky.easylimit.permission.PermissionInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -51,19 +53,27 @@ public abstract class AbstractPermissionRealm extends AbstractAuthenticationReal
         this(null, null);
     }
 
+    /**
+     * Note: 建议缓存角色、权限信息
+     */
     public AbstractPermissionRealm(Cache<String, PermissionInfo> permissionInfoCache) {
         this(permissionInfoCache, DEFAULT_PERMISSION_INFO_CACHE_NAME);
     }
 
+    /**
+     * Note: 建议缓存角色、权限信息
+     */
     public AbstractPermissionRealm(Cache<String, PermissionInfo> permissionInfoCache, String permissionInfoCacheName) {
         super();
         if(permissionInfoCache != null){
             this.enablePermissionInfoCache = true;
             this.permissionInfoCache = permissionInfoCache;
-        }
 
-        if(permissionInfoCacheName != null){
-            this.permissionInfoCacheName = permissionInfoCacheName;
+            if(permissionInfoCacheName != null){
+                this.permissionInfoCacheName = permissionInfoCacheName;
+            }else{
+                this.permissionInfoCacheName = DEFAULT_PERMISSION_INFO_CACHE_NAME;
+            }
         }
     }
 
@@ -326,6 +336,10 @@ public abstract class AbstractPermissionRealm extends AbstractAuthenticationReal
 
     @Override
     public boolean hasAnyPermissions(PrincipalInfo principalInfo, String... permissions) {
+        if(permissions == null){
+            throw new IllegalArgumentException("Parameter permissions cannot be empty.");
+        }
+
         PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
 
         List<String> list = Arrays.asList(permissions);
@@ -340,6 +354,10 @@ public abstract class AbstractPermissionRealm extends AbstractAuthenticationReal
 
     @Override
     public boolean hasAllPermissions(PrincipalInfo principalInfo, String... permissions) {
+        if(permissions == null){
+            throw new IllegalArgumentException("Parameter permissions cannot be empty.");
+        }
+
         PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
 
         List<String> list = Arrays.asList(permissions);
@@ -360,6 +378,10 @@ public abstract class AbstractPermissionRealm extends AbstractAuthenticationReal
 
     @Override
     public boolean hasAnyRoles(PrincipalInfo principalInfo, String... roles) {
+        if(roles == null){
+            throw new IllegalArgumentException("Parameter roles cannot be empty.");
+        }
+
         PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
 
         List<String> list = Arrays.asList(roles);
@@ -374,6 +396,10 @@ public abstract class AbstractPermissionRealm extends AbstractAuthenticationReal
 
     @Override
     public boolean hasAllRoles(PrincipalInfo principalInfo, String... roles) {
+        if(roles == null){
+            throw new IllegalArgumentException("Parameter roles cannot be empty.");
+        }
+
         PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
 
         List<String> list = Arrays.asList(roles);
@@ -384,6 +410,148 @@ public abstract class AbstractPermissionRealm extends AbstractAuthenticationReal
     public boolean hasAllRoles(PrincipalInfo principalInfo, Collection<String> roles) {
         PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
         return this.hasAllRoles(permissionInfo, roles);
+    }
+
+    /**
+     * 判断是否拥有某个权限
+     *
+     * @param permissionInfo 所有的角色、权限信息
+     * @param permission 权限CODE
+     * @throws NoPermissionException 没有某个权限的异常
+     * @author zifangsky
+     * @date 2019/4/3 14:45
+     * @since 1.0.0
+     */
+    protected void checkPermission(PermissionInfo permissionInfo, String permission) throws NoPermissionException {
+        if(!this.hasPermission(permissionInfo, permission)){
+            throw new NoPermissionException(MessageFormat.format("The current user principal does not have the permission[{0}].", permission));
+        }
+    }
+
+    @Override
+    public void checkPermission(PrincipalInfo principalInfo, String permission) throws NoPermissionException {
+        PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
+        this.checkPermission(permissionInfo, permission);
+    }
+
+    @Override
+    public void checkAnyPermissions(PrincipalInfo principalInfo, String... permissions) throws NoPermissionException {
+        if(permissions == null){
+            throw new IllegalArgumentException("Parameter permissions cannot be empty.");
+        }
+
+        PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
+        List<String> list = Arrays.asList(permissions);
+
+        if(!this.hasAnyPermissions(permissionInfo, list)){
+            this.checkPermission(permissionInfo, permissions[0]);
+        }
+    }
+
+    @Override
+    public void checkAnyPermissions(PrincipalInfo principalInfo, Collection<String> permissions) throws NoPermissionException {
+        PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
+
+        if(!this.hasAnyPermissions(permissionInfo, permissions)){
+            this.checkPermission(permissionInfo, permissions.iterator().next());
+        }
+    }
+
+    @Override
+    public void checkAllPermissions(PrincipalInfo principalInfo, String... permissions) throws NoPermissionException {
+        if(permissions == null){
+            throw new IllegalArgumentException("Parameter permissions cannot be empty.");
+        }
+
+        PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
+
+        for(String tmp : permissions){
+            this.checkPermission(permissionInfo, tmp);
+        }
+    }
+
+    @Override
+    public void checkAllPermissions(PrincipalInfo principalInfo, Collection<String> permissions) throws NoPermissionException {
+        if(permissions == null){
+            throw new IllegalArgumentException("Parameter permissions cannot be empty.");
+        }
+
+        PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
+
+        for(String tmp : permissions){
+            this.checkPermission(permissionInfo, tmp);
+        }
+    }
+
+    /**
+     * 判断是否拥有某个角色
+     *
+     * @param permissionInfo 所有的角色、权限信息
+     * @param role 角色CODE
+     * @throws NoRoleException 没有某个角色的异常
+     * @author zifangsky
+     * @date 2019/4/3 14:45
+     * @since 1.0.0
+     */
+    protected void checkRole(PermissionInfo permissionInfo, String role) throws NoRoleException {
+        if(!this.hasRole(permissionInfo, role)){
+            throw new NoRoleException(MessageFormat.format("The current user principal does not have the role[{0}].", role));
+        }
+    }
+
+    @Override
+    public void checkRole(PrincipalInfo principalInfo, String role) throws NoRoleException {
+        PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
+        this.checkRole(permissionInfo, role);
+    }
+
+    @Override
+    public void checkAnyRoles(PrincipalInfo principalInfo, String... roles) throws NoRoleException {
+        if(roles == null){
+            throw new IllegalArgumentException("Parameter roles cannot be empty.");
+        }
+
+        PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
+        List<String> list = Arrays.asList(roles);
+
+        if(!this.hasAnyRoles(permissionInfo, list)){
+            this.checkRole(permissionInfo, roles[0]);
+        }
+    }
+
+    @Override
+    public void checkAnyRoles(PrincipalInfo principalInfo, Collection<String> roles) throws NoRoleException {
+        PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
+
+        if(!this.hasAnyRoles(permissionInfo, roles)){
+            this.checkRole(permissionInfo, roles.iterator().next());
+        }
+    }
+
+    @Override
+    public void checkAllRoles(PrincipalInfo principalInfo, String... roles) throws NoRoleException {
+        if(roles == null){
+            throw new IllegalArgumentException("Parameter roles cannot be empty.");
+        }
+
+        PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
+
+        for(String tmp : roles){
+            this.checkRole(permissionInfo, tmp);
+        }
+    }
+
+    @Override
+    public void checkAllRoles(PrincipalInfo principalInfo, Collection<String> roles) throws NoRoleException {
+        if(roles == null){
+            throw new IllegalArgumentException("Parameter roles cannot be empty.");
+        }
+
+        PermissionInfo permissionInfo = this.createPermissionInfo(principalInfo);
+
+        for(String tmp : roles){
+            this.checkRole(permissionInfo, tmp);
+        }
     }
 
     public boolean isEnablePermissionInfoCache() {
