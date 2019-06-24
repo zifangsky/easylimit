@@ -41,7 +41,11 @@ public enum DefaultTokenRespEnums {
     /**
      * TOKEN过期
      */
-    EXPIRED_TOKEN(403,"请求的Access Token或Refresh Token已过期！")
+    EXPIRED_TOKEN(403,"请求的Access Token或Refresh Token已过期！"),
+    /**
+     * 系统异常
+     */
+    SYSTEM_ERROR(500,"系统异常！")
     ;
 
     DefaultTokenRespEnums(int code, String msg) {
