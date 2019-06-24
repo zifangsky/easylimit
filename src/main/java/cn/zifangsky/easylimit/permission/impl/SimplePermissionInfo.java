@@ -48,4 +48,12 @@ public class SimplePermissionInfo implements PermissionInfo{
     public void setPermissions(Set<String> permissions) {
         this.permissions = permissions;
     }
+
+    @Override
+    public String toString() {
+        return "SimplePermissionInfo{" +
+                "roles=" + roles +
+                ", permissions=" + permissions +
+                '}';
+    }
 }

@@ -50,7 +50,7 @@ public abstract class AbstractPermissionRealm extends AbstractAuthenticationReal
     private String permissionInfoCacheName;
 
     public AbstractPermissionRealm() {
-        this(null, null);
+        this(null, DEFAULT_PERMISSION_INFO_CACHE_NAME);
     }
 
     /**
@@ -68,12 +68,12 @@ public abstract class AbstractPermissionRealm extends AbstractAuthenticationReal
         if(permissionInfoCache != null){
             this.enablePermissionInfoCache = true;
             this.permissionInfoCache = permissionInfoCache;
+        }
 
-            if(permissionInfoCacheName != null){
-                this.permissionInfoCacheName = permissionInfoCacheName;
-            }else{
-                this.permissionInfoCacheName = DEFAULT_PERMISSION_INFO_CACHE_NAME;
-            }
+        if(permissionInfoCacheName != null){
+            this.permissionInfoCacheName = permissionInfoCacheName;
+        }else{
+            this.permissionInfoCacheName = DEFAULT_PERMISSION_INFO_CACHE_NAME;
         }
     }
 

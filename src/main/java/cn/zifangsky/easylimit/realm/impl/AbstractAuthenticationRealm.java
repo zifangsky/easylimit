@@ -47,7 +47,7 @@ public abstract class AbstractAuthenticationRealm implements Realm{
     private String principalInfoCacheName;
 
     public AbstractAuthenticationRealm() {
-        this(null, null);
+        this(null, DEFAULT_PRINCIPAL_INFO_CACHE_NAME);
     }
 
     public AbstractAuthenticationRealm(Cache<String, PrincipalInfo> principalInfoCache) {
@@ -58,12 +58,12 @@ public abstract class AbstractAuthenticationRealm implements Realm{
         if(principalInfoCache != null){
             this.enablePrincipalInfoCache = true;
             this.principalInfoCache = principalInfoCache;
+        }
 
-            if(principalInfoCacheName != null){
-                this.principalInfoCacheName = principalInfoCacheName;
-            }else{
-                this.principalInfoCacheName = DEFAULT_PRINCIPAL_INFO_CACHE_NAME;
-            }
+        if(principalInfoCacheName != null){
+            this.principalInfoCacheName = principalInfoCacheName;
+        }else{
+            this.principalInfoCacheName = DEFAULT_PRINCIPAL_INFO_CACHE_NAME;
         }
     }
 
