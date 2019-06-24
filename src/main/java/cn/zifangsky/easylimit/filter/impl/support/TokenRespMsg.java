@@ -1,5 +1,7 @@
 package cn.zifangsky.easylimit.filter.impl.support;
 
+import cn.zifangsky.easylimit.enums.DefaultTokenRespEnums;
+
 /**
  * 基于Token的返回提示
  *
@@ -14,6 +16,11 @@ public class TokenRespMsg {
     private Integer code;
 
     /**
+     * 返回字段名
+     */
+    private String name;
+
+    /**
      * 返回提示信息
      */
     private String msg;
@@ -21,8 +28,15 @@ public class TokenRespMsg {
     public TokenRespMsg() {
     }
 
-    public TokenRespMsg(Integer code, String msg) {
+    public TokenRespMsg(DefaultTokenRespEnums defaultTokenRespEnums) {
+        this.code = defaultTokenRespEnums.getCode();
+        this.name = defaultTokenRespEnums.getName();
+        this.msg = defaultTokenRespEnums.getMsg();
+    }
+
+    public TokenRespMsg(Integer code, String name, String msg) {
         this.code = code;
+        this.name = name;
         this.msg = msg;
     }
 
@@ -42,10 +56,19 @@ public class TokenRespMsg {
         this.msg = msg;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
-        return "TokenErrorRespMsg{" +
+        return "TokenRespMsg{" +
                 "code=" + code +
+                ", name='" + name + '\'' +
                 ", msg='" + msg + '\'' +
                 '}';
     }

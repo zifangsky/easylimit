@@ -29,7 +29,7 @@ public class DefaultLogoutFilter extends AbstractAdviceFilter{
     /**
      * Token模式的未登录情况的错误返回
      */
-    private TokenRespMsg logoutRespMsg = new TokenRespMsg(DefaultTokenRespEnums.LOGOUT.getCode(), DefaultTokenRespEnums.LOGOUT.getMsg());
+    private TokenRespMsg logoutRespMsg = new TokenRespMsg(DefaultTokenRespEnums.LOGOUT);
 
     /**
      * 注销之后的重定向URL

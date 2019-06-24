@@ -111,6 +111,7 @@ public abstract class AbstractOncePerRequestFilter extends AbstractFilter{
         response.setHeader("Content-type", "application/json;charset=UTF-8");
         Map<String,Object> result = new HashMap<>(2);
         result.put("code", tokenRespMsg.getCode());
+        result.put("name", tokenRespMsg.getName());
         result.put("msg", tokenRespMsg.getMsg());
 
         response.getWriter().write(JsonUtils.toJson(result));

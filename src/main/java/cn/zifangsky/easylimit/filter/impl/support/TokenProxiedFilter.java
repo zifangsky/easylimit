@@ -33,27 +33,27 @@ public class TokenProxiedFilter extends AbstractProxiedFilter {
     /**
      * Token模式的“TOKEN不可用”情况的错误返回
      */
-    private TokenRespMsg invalidTokenRespMsg = new TokenRespMsg(DefaultTokenRespEnums.INVALID_TOKEN.getCode(), DefaultTokenRespEnums.INVALID_TOKEN.getMsg());
+    private TokenRespMsg invalidTokenRespMsg = new TokenRespMsg(DefaultTokenRespEnums.INVALID_TOKEN);
 
     /**
      * Token模式的“TOKEN过期”情况的错误返回
      */
-    private TokenRespMsg expiredTokenRespMsg = new TokenRespMsg(DefaultTokenRespEnums.EXPIRED_TOKEN.getCode(), DefaultTokenRespEnums.EXPIRED_TOKEN.getMsg());
+    private TokenRespMsg expiredTokenRespMsg = new TokenRespMsg(DefaultTokenRespEnums.EXPIRED_TOKEN);
 
     /**
      * Token模式的“没有指定权限”情况的错误返回
      */
-    private TokenRespMsg noPermissionsRespMsg = new TokenRespMsg(DefaultTokenRespEnums.NO_PERMISSIONS.getCode(), DefaultTokenRespEnums.NO_PERMISSIONS.getMsg());
+    private TokenRespMsg noPermissionsRespMsg = new TokenRespMsg(DefaultTokenRespEnums.NO_PERMISSIONS);
 
     /**
      * Token模式的“未登录”情况的错误返回
      */
-    private TokenRespMsg notLoginRespMsg = new TokenRespMsg(DefaultTokenRespEnums.UN_LOGIN.getCode(), DefaultTokenRespEnums.UN_LOGIN.getMsg());
+    private TokenRespMsg notLoginRespMsg = new TokenRespMsg(DefaultTokenRespEnums.UN_LOGIN);
 
     /**
      * Token模式的“系统异常”情况的错误返回
      */
-    private TokenRespMsg systemErrorRespMsg = new TokenRespMsg(DefaultTokenRespEnums.SYSTEM_ERROR.getCode(), DefaultTokenRespEnums.SYSTEM_ERROR.getMsg());
+    private TokenRespMsg systemErrorRespMsg = new TokenRespMsg(DefaultTokenRespEnums.SYSTEM_ERROR);
 
 
     public TokenProxiedFilter(SecurityManager securityManager, FilterChainResolver filterChainResolver) {

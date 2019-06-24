@@ -22,7 +22,7 @@ public class DefaultLoginFilter extends AbstractAccessControlFilter{
     /**
      * Token模式的未登录情况的错误返回
      */
-    private TokenRespMsg unLoginRespMsg = new TokenRespMsg(DefaultTokenRespEnums.UN_LOGIN.getCode(), DefaultTokenRespEnums.UN_LOGIN.getMsg());
+    private TokenRespMsg unLoginRespMsg = new TokenRespMsg(DefaultTokenRespEnums.UN_LOGIN);
 
     @Override
     protected boolean isAccessAllowed(HttpServletRequest request, HttpServletResponse response, String[] controlVal) throws Exception {

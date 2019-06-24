@@ -22,7 +22,7 @@ public abstract class AbstractVerifyFilter extends AbstractAccessControlFilter{
     /**
      * Token模式的没有权限情况的错误返回
      */
-    private TokenRespMsg unauthorizedRespMsg = new TokenRespMsg(DefaultTokenRespEnums.NO_PERMISSIONS.getCode(), DefaultTokenRespEnums.NO_PERMISSIONS.getMsg());
+    private TokenRespMsg unauthorizedRespMsg = new TokenRespMsg(DefaultTokenRespEnums.NO_PERMISSIONS);
 
     /**
      * 认证失败跳转的URL
