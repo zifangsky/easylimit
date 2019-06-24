@@ -19,7 +19,7 @@ import java.util.Collection;
  */
 public abstract class AbstractCacheTokenDAO implements TokenDAO {
     /**
-     * 默认的session缓存名称
+     * 默认的token缓存名称
      */
     private static final String DEFAULT_TOKEN_CACHE_NAME = Constants.PROJECT_NAME + ":token_cache";
 
