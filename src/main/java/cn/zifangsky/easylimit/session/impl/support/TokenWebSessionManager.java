@@ -240,9 +240,13 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
 
         if(accessToken == null){
             //2. 如果参数中不存在，则尝试从Header中获取
-            String authorization = request.getHeader("Authorization");
-            if(StringUtils.isNoneBlank(authorization)){
-                accessToken = authorization;
+            accessToken = request.getHeader(tokenInfo.getAccessTokenParamName());
+
+            if(accessToken == null){
+                String authorization = request.getHeader("Authorization");
+                if(StringUtils.isNoneBlank(authorization)){
+                    accessToken = authorization;
+                }
             }
         }
 
@@ -278,6 +282,7 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
         SimpleAccessToken accessToken = (SimpleAccessToken) session.getAttribute(TokenSessionContext.SIMPLE_ACCESS_TOKEN_KEY);
 
         if(accessToken != null){
+            LOGGER.debug(MessageFormat.format("Access Token [{0}] has expired.", accessToken.getAccessToken()));
             //2. 从DAO中删除
             this.tokenDAO.deleteAccessToken(accessToken.getAccessToken());
         }
@@ -287,6 +292,8 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
      * 移除过期的Access Token
      */
     protected void removeExpiredAccessToken(SimpleAccessToken accessToken){
+        LOGGER.debug(MessageFormat.format("Access Token [{0}] has expired.", accessToken.getAccessToken()));
+
         this.tokenDAO.deleteAccessToken(accessToken.getAccessToken());
     }
 
@@ -294,6 +301,8 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
      * 移除失效的Access Token
      */
     protected void removeInvalidAccessToken(String accessToken){
+        LOGGER.debug(MessageFormat.format("Access Token [{0}] has invalid.", accessToken));
+
         this.tokenDAO.deleteAccessToken(accessToken);
     }
 
@@ -301,6 +310,8 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
      * 移除过期的Refresh Token
      */
     protected void removeExpiredRefreshToken(SimpleRefreshToken refreshToken){
+        LOGGER.debug(MessageFormat.format("Refresh Token [{0}] has invalid.", refreshToken.getRefreshToken()));
+
         this.tokenDAO.deleteRefreshToken(refreshToken.getRefreshToken());
     }
 
