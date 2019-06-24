@@ -132,7 +132,7 @@ public abstract class AbstractCacheSessionDAO implements SessionDAO {
     }
 
     @Override
-    public Session read(Serializable sessionId) throws UnknownSessionException {
+    public synchronized Session read(Serializable sessionId) throws UnknownSessionException {
         if (sessionId == null) {
             throw new IllegalArgumentException("Parameter sessionId cannot be empty.");
         }
@@ -152,23 +152,22 @@ public abstract class AbstractCacheSessionDAO implements SessionDAO {
     }
 
     @Override
-    public void update(Session session) throws UnknownSessionException {
+    public synchronized void update(Session session) throws UnknownSessionException {
         if (session == null) {
             throw new IllegalArgumentException("Parameter session cannot be empty.");
         }
 
         //先更新本地，再更新缓存中的数据
-        this.doUpdate(session.getId(), session);
-
         if (session.isValid()) {
+            this.doUpdate(session.getId(), session);
             this.putCache(session.getId(), session);
         } else {
-            this.removeCache(session);
+            this.delete(session);
         }
     }
 
     @Override
-    public void delete(Session session) {
+    public synchronized void delete(Session session) {
         if (session == null) {
             throw new IllegalArgumentException("Parameter session cannot be empty.");
         }
@@ -179,7 +178,7 @@ public abstract class AbstractCacheSessionDAO implements SessionDAO {
     }
 
     @Override
-    public Set<Session> getActiveSessions() {
+    public synchronized Set<Session> getActiveSessions() {
         Collection<Session> values = cache.values(this.sessionCacheName);
         Set<Session> result = new HashSet<>();
 
