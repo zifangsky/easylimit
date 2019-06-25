@@ -171,7 +171,6 @@
     </dependencies>
 
 	<build>
-        <finalName>easylimit</finalName>
         <plugins>
             <!--配置生成源码包-->
             <plugin>
