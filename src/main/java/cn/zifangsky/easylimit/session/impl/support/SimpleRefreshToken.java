@@ -39,6 +39,11 @@ public class SimpleRefreshToken {
     private ValidatedInfo validatedInfo;
 
     /**
+     * 是否已经过期
+     */
+    private boolean expired = false;
+
+    /**
      * 创建时间
      */
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -135,6 +140,14 @@ public class SimpleRefreshToken {
         this.stopTime = stopTime;
     }
 
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
+    }
+
     @Override
     public String toString() {
         return "SimpleRefreshToken{" +
@@ -142,6 +155,7 @@ public class SimpleRefreshToken {
                 ", expiresIn=" + expiresIn +
                 ", accessToken='" + accessToken + '\'' +
                 ", validatedInfo=" + validatedInfo +
+                ", expired=" + expired +
                 ", createTime=" + createTime +
                 ", latestAccessTime=" + latestAccessTime +
                 ", stopTime=" + stopTime +

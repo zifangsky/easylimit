@@ -66,6 +66,11 @@ public class DefaultTokenOperateResolver implements TokenOperateResolver{
         if(simpleAccessToken == null){
             return false;
         }else{
+            //已经过期
+            if(simpleAccessToken.isExpired()){
+                return false;
+            }
+
             LocalDateTime now = DateUtils.now();
             //过期时间
             LocalDateTime expirationTime = simpleAccessToken.getCreateTime().plus(simpleAccessToken.getExpiresIn(), ChronoUnit.SECONDS);
@@ -79,6 +84,11 @@ public class DefaultTokenOperateResolver implements TokenOperateResolver{
         if(simpleRefreshToken == null){
             return false;
         }else{
+            //已经过期
+            if(simpleRefreshToken.isExpired()){
+                return false;
+            }
+
             LocalDateTime now = DateUtils.now();
             //过期时间
             LocalDateTime expirationTime = simpleRefreshToken.getCreateTime().plus(simpleRefreshToken.getExpiresIn(), ChronoUnit.SECONDS);

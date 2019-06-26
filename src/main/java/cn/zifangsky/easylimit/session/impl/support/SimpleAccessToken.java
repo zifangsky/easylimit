@@ -40,6 +40,11 @@ public class SimpleAccessToken {
     private Serializable sessionId;
 
     /**
+     * 是否已经过期
+     */
+    private boolean expired = false;
+
+    /**
      * 创建时间
      */
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -136,6 +141,14 @@ public class SimpleAccessToken {
         this.stopTime = stopTime;
     }
 
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
+    }
+
     @Override
     public String toString() {
         return "SimpleAccessToken{" +
@@ -143,6 +156,7 @@ public class SimpleAccessToken {
                 ", expiresIn=" + expiresIn +
                 ", principalInfo=" + principalInfo +
                 ", sessionId=" + sessionId +
+                ", expired=" + expired +
                 ", createTime=" + createTime +
                 ", latestAccessTime=" + latestAccessTime +
                 ", stopTime=" + stopTime +
