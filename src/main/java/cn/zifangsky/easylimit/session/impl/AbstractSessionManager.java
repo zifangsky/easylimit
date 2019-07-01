@@ -172,7 +172,7 @@ public abstract class AbstractSessionManager implements SessionManager {
      */
     protected void notifyCreate(Session session) {
         if(this.sessionListeners != null && this.sessionListeners.size() > 0){
-            sessionListeners.forEach(SessionListener::onCreate);
+            sessionListeners.forEach(listener -> listener.onCreate(session));
         }
     }
 
@@ -185,7 +185,9 @@ public abstract class AbstractSessionManager implements SessionManager {
      * @since 1.0.0
      */
     protected void notifyStop(Session session) {
-        sessionListeners.forEach(SessionListener::onStop);
+        if(this.sessionListeners != null && this.sessionListeners.size() > 0){
+            sessionListeners.forEach(listener -> listener.onStop(session));
+        }
     }
 
     /**
@@ -197,7 +199,9 @@ public abstract class AbstractSessionManager implements SessionManager {
      * @since 1.0.0
      */
     protected void notifyExpiration(Session session) {
-        sessionListeners.forEach(SessionListener::onExpiration);
+        if(this.sessionListeners != null && this.sessionListeners.size() > 0){
+            sessionListeners.forEach(listener -> listener.onExpiration(session));
+        }
     }
 
     @Override

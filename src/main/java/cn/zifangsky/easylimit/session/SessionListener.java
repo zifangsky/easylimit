@@ -15,7 +15,7 @@ public interface SessionListener {
      * @date 2019/3/29 15:06
      * @since 1.0.0
      */
-    void onCreate();
+    void onCreate(Session session);
 
     /**
      * {@link Session}停止之后触发
@@ -24,7 +24,7 @@ public interface SessionListener {
      * @date 2019/3/29 15:06
      * @since 1.0.0
      */
-    void onStop();
+    void onStop(Session session);
 
     /**
      * {@link Session}过期之后触发
@@ -33,5 +33,5 @@ public interface SessionListener {
      * @date 2019/3/29 15:06
      * @since 1.0.0
      */
-    void onExpiration();
+    void onExpiration(Session session);
 }
