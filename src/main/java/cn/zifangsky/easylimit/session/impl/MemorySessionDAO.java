@@ -5,7 +5,6 @@ import cn.zifangsky.easylimit.session.Session;
 import cn.zifangsky.easylimit.session.SessionDAO;
 
 import java.io.Serializable;
-import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,12 +37,7 @@ public class MemorySessionDAO implements SessionDAO {
             throw new IllegalArgumentException("Parameter sessionId cannot be empty.");
         }
 
-        Session session = sessionStorageMap.get(sessionId);
-        if (session == null) {
-            throw new UnknownSessionException(MessageFormat.format("Session cannot be retrieved with SessionId[{0}].", sessionId));
-        }
-
-        return session;
+        return sessionStorageMap.get(sessionId);
     }
 
     @Override

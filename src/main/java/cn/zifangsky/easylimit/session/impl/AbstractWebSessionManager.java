@@ -1,5 +1,6 @@
 package cn.zifangsky.easylimit.session.impl;
 
+import cn.zifangsky.easylimit.exception.session.SessionException;
 import cn.zifangsky.easylimit.exception.session.UnknownSessionException;
 import cn.zifangsky.easylimit.session.Session;
 import cn.zifangsky.easylimit.session.SessionContext;
@@ -29,6 +30,11 @@ public abstract class AbstractWebSessionManager extends AbstractValidationSessio
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractWebSessionManager.class);
 
     /**
+     * 创建sessionId的最大尝试次数
+     */
+    public static final int MAX_SESSION_ID_RETRIES_TIMES = 3;
+
+    /**
      * 用于生成sessionId
      */
     private SessionIdFactory sessionIdFactory;
@@ -45,6 +51,11 @@ public abstract class AbstractWebSessionManager extends AbstractValidationSessio
      */
     private boolean deleteInvalidSessions;
 
+    /**
+     * 创建sessionId的尝试次数，默认为：{@link #MAX_SESSION_ID_RETRIES_TIMES}
+     */
+    private int sessionIdRetriesTimes;
+
     public AbstractWebSessionManager() {
         //默认使用雪花算法生成sessionId
         this.sessionIdFactory = new SnowFlakeSessionIdFactory(0, 0);
@@ -54,6 +65,8 @@ public abstract class AbstractWebSessionManager extends AbstractValidationSessio
         this.sessionDAO = new MemorySessionDAO();
         //默认删除过期不可用的session
         this.deleteInvalidSessions = true;
+        //默认创建sessionId时最多尝试3次
+        this.sessionIdRetriesTimes = MAX_SESSION_ID_RETRIES_TIMES;
     }
 
     /**
@@ -75,7 +88,7 @@ public abstract class AbstractWebSessionManager extends AbstractValidationSessio
     @Override
     protected Session doCreateSession(SessionContext sessionContext) {
         //1. 创建sessionId
-        Serializable sessionId = sessionIdFactory.generateSessionId();
+        Serializable sessionId = this.doCreateSessionId(sessionContext);
         sessionContext.setSessionId(sessionId);
 
         //2. 创建session
@@ -96,6 +109,33 @@ public abstract class AbstractWebSessionManager extends AbstractValidationSessio
     @Override
     protected void storeSession(Session session) {
         this.sessionDAO.update(session);
+    }
+
+    /**
+     * 创建sessionId并判断是否跟已有的重复
+     */
+    protected Serializable doCreateSessionId(SessionContext sessionContext){
+        if(this.sessionIdRetriesTimes <= 0){
+            throw new IllegalArgumentException("Parameter sessionIdRetriesTimes cannot be less than or equal to zero.");
+        }
+
+        Serializable sessionId = null;
+        for(int i = 0; i < sessionIdRetriesTimes; i++){
+            //1. 创建sessionId
+            sessionId = sessionIdFactory.generateSessionId();
+
+            //2. 判断是否跟已有sessionId重复
+            Session session = this.retrieveSession(sessionId);
+            if(session == null){
+                return sessionId;
+            }
+        }
+
+        throw new SessionException(MessageFormat.format("The available sessionId cannot be created within {0} times.", sessionIdRetriesTimes));
+    }
+
+    protected Session retrieveSession(Serializable sessionId) throws UnknownSessionException {
+        return sessionDAO.read(sessionId);
     }
 
     /**
@@ -176,5 +216,13 @@ public abstract class AbstractWebSessionManager extends AbstractValidationSessio
 
     public void setDeleteInvalidSessions(boolean deleteInvalidSessions) {
         this.deleteInvalidSessions = deleteInvalidSessions;
+    }
+
+    public int getSessionIdRetriesTimes() {
+        return sessionIdRetriesTimes;
+    }
+
+    public void setSessionIdRetriesTimes(int sessionIdRetriesTimes) {
+        this.sessionIdRetriesTimes = sessionIdRetriesTimes;
     }
 }

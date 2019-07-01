@@ -33,6 +33,11 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenWebSessionManager.class);
 
     /**
+     * 创建Token的最大尝试次数
+     */
+    public static final int MAX_TOKEN_RETRIES_TIMES = 3;
+
+    /**
      * token的基本参数
      */
     private TokenInfo tokenInfo;
@@ -46,6 +51,11 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
      * Access Token和Refresh Token的存储
      */
     private TokenDAO tokenDAO;
+
+    /**
+     * 创建Token的尝试次数，默认为：{@link #MAX_TOKEN_RETRIES_TIMES}
+     */
+    private int tokenRetriesTimes;
 
     public TokenWebSessionManager() {
         this(new TokenInfo(), new DefaultTokenOperateResolver(), new MemoryTokenDAO());
@@ -76,6 +86,8 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
         this.tokenInfo = tokenInfo;
         this.tokenOperateResolver = tokenOperateResolver;
         this.tokenDAO = tokenDAO;
+        //默认创建Token时最多尝试3次
+        this.tokenRetriesTimes = MAX_TOKEN_RETRIES_TIMES;
 
         super.setGlobalTimeout(tokenInfo.getAccessTokenTimeout());
         super.setGlobalTimeoutChronoUnit(tokenInfo.getAccessTokenTimeoutUnit());
@@ -91,7 +103,7 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
      * @return cn.zifangsky.easylimit.session.impl.support.SimpleAccessToken
      */
     public SimpleAccessToken createAccessToken(PrincipalInfo principalInfo, Session session){
-        SimpleAccessToken accessToken = this.tokenOperateResolver.createAccessToken(principalInfo, this.tokenInfo, session.getId());
+        SimpleAccessToken accessToken = this.doCreateAccessToken(principalInfo, this.tokenInfo, session.getId());
         this.onCreateAccessToken(principalInfo, accessToken);
 
         return accessToken;
@@ -107,7 +119,7 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
      * @return cn.zifangsky.easylimit.session.impl.support.SimpleRefreshToken
      */
     public SimpleRefreshToken createRefreshToken(ValidatedInfo validatedInfo, SimpleAccessToken accessToken){
-        SimpleRefreshToken refreshToken = this.tokenOperateResolver.createRefreshToken(validatedInfo, this.tokenInfo, accessToken.getAccessToken());
+        SimpleRefreshToken refreshToken = this.doCreateRefreshToken(validatedInfo, this.tokenInfo, accessToken.getAccessToken());
         this.onCreateRefreshToken(accessToken, refreshToken);
 
         return refreshToken;
@@ -157,7 +169,7 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
      */
     public SimpleAccessRefreshToken refreshAccessToken(SimpleRefreshToken simpleRefreshToken, PrincipalInfo principalInfo, Session session) {
         //1. 生成新的Access Token
-        SimpleAccessToken newAccessToken = this.tokenOperateResolver.createAccessToken(principalInfo, this.tokenInfo, session.getId());
+        SimpleAccessToken newAccessToken = this.doCreateAccessToken(principalInfo, this.tokenInfo, session.getId());
 
         //2. 移除失效的Access Token
         this.removeInvalidAccessToken(simpleRefreshToken.getAccessToken());
@@ -228,6 +240,56 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
         }
 
         return null;
+    }
+
+    /**
+     * 创建Access Token并判断是否跟已有的重复
+     */
+    protected SimpleAccessToken doCreateAccessToken(PrincipalInfo principalInfo, TokenInfo tokenInfo, Serializable sessionId){
+        if(this.tokenRetriesTimes <= 0){
+            throw new IllegalArgumentException("Parameter tokenRetriesTimes cannot be less than or equal to zero.");
+        }
+
+        SimpleAccessToken newSimpleAccessToken = null;
+        for(int i = 0; i < tokenRetriesTimes; i++){
+            //1. 创建Access Token
+            newSimpleAccessToken = this.tokenOperateResolver.createAccessToken(principalInfo, tokenInfo, sessionId);
+
+            //2. 判断是否跟已有Access Token重复
+            if(newSimpleAccessToken != null && newSimpleAccessToken.getAccessToken() != null){
+                SimpleAccessToken savedSimpleAccessToken = this.tokenDAO.readByAccessToken(newSimpleAccessToken.getAccessToken());
+                if(savedSimpleAccessToken == null){
+                    return newSimpleAccessToken;
+                }
+            }
+        }
+
+        throw new TokenException(MessageFormat.format("The available access_token cannot be created within {0} times.", tokenRetriesTimes));
+    }
+
+    /**
+     * 创建Refresh Token并判断是否跟已有的重复
+     */
+    protected SimpleRefreshToken doCreateRefreshToken(ValidatedInfo validatedInfo, TokenInfo tokenInfo, String accessToken){
+        if(this.tokenRetriesTimes <= 0){
+            throw new IllegalArgumentException("Parameter tokenRetriesTimes cannot be less than or equal to zero.");
+        }
+
+        SimpleRefreshToken newSimpleRefreshToken = null;
+        for(int i = 0; i < tokenRetriesTimes; i++){
+            //1. 创建Refresh Token
+            newSimpleRefreshToken = this.tokenOperateResolver.createRefreshToken(validatedInfo, tokenInfo, accessToken);
+
+            //2. 判断是否跟已有Refresh Token重复
+            if(newSimpleRefreshToken != null && newSimpleRefreshToken.getRefreshToken() != null){
+                SimpleRefreshToken savedSimpleRefreshToken = this.tokenDAO.readByRefreshToken(newSimpleRefreshToken.getRefreshToken());
+                if(savedSimpleRefreshToken == null){
+                    return newSimpleRefreshToken;
+                }
+            }
+        }
+
+        throw new TokenException(MessageFormat.format("The available refresh_token cannot be created within {0} times.", tokenRetriesTimes));
     }
 
     /**
@@ -351,5 +413,21 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
 
     public void setTokenDAO(TokenDAO tokenDAO) {
         this.tokenDAO = tokenDAO;
+    }
+
+    public int getTokenRetriesTimes() {
+        return tokenRetriesTimes;
+    }
+
+    public void setTokenRetriesTimes(int tokenRetriesTimes) {
+        this.tokenRetriesTimes = tokenRetriesTimes;
+    }
+
+    public TokenInfo getTokenInfo() {
+        return tokenInfo;
+    }
+
+    public void setTokenInfo(TokenInfo tokenInfo) {
+        this.tokenInfo = tokenInfo;
     }
 }
