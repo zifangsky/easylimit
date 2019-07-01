@@ -14,6 +14,8 @@ import cn.zifangsky.easylimit.exception.authc.NotLoginException;
 import cn.zifangsky.easylimit.session.Session;
 import cn.zifangsky.easylimit.session.SessionContext;
 import cn.zifangsky.easylimit.session.impl.DefaultSessionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -28,34 +30,36 @@ import java.util.concurrent.Callable;
  * @since 1.0.0
  */
 public class ExposedAccess implements Access{
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExposedAccess.class);
+
     /**
      * ServletRequest
      */
-    private ServletRequest request;
+    protected ServletRequest request;
     /**
      * ServletResponse
      */
-    private ServletResponse response;
+    protected ServletResponse response;
     /**
      * host
      */
-    private String host;
+    protected String host;
     /**
      * Session
      */
-    private Session session;
+    protected Session session;
     /**
      * 是否已经登录认证通过
      */
-    private Boolean authenticated;
+    protected Boolean authenticated;
     /**
      * 用户主体信息
      */
-    private PrincipalInfo principalInfo;
+    protected PrincipalInfo principalInfo;
     /**
      * 认证、权限、session等管理的入口
      */
-    private SecurityManager securityManager;
+    protected SecurityManager securityManager;
 
     public ExposedAccess(ServletRequest request, ServletResponse response, SecurityManager securityManager) {
         this(request, response, null, null, false, null, securityManager);
@@ -289,6 +293,8 @@ public class ExposedAccess implements Access{
     public void logout() {
         try {
             this.securityManager.logout(this);
+        }catch (Exception e){
+            LOGGER.error("The ExposedAccess.logout() method threw an exception.", e);
         }finally {
             this.session = null;
             this.authenticated = false;

@@ -123,6 +123,21 @@ public class ExposedTokenAccess extends ExposedAccess{
     }
 
     @Override
+    public void logout() {
+        try {
+            this.securityManager.logout(this);
+        }catch (Exception e){
+            LOGGER.error("The ExposedTokenAccess.logout() method threw an exception.", e);
+        }finally {
+            this.session = null;
+            this.authenticated = false;
+            this.principalInfo = null;
+            this.accessToken = null;
+            this.refreshToken = null;
+        }
+    }
+
+    @Override
     protected SessionContext createSessionContext() {
         SessionContext sessionContext = new TokenSessionContext();
         sessionContext.setServletRequest(this.getRequest());
