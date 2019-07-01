@@ -2,6 +2,7 @@ package cn.zifangsky.easylimit.authc.impl;
 
 import cn.zifangsky.easylimit.authc.ValidatedInfo;
 import cn.zifangsky.easylimit.enums.EncryptionTypeEnums;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 基于“用户名+密码”的登录验证信息
@@ -28,6 +29,9 @@ public class UsernamePasswordValidatedInfo implements ValidatedInfo {
      */
     private EncryptionTypeEnums encryptionType;
 
+    public UsernamePasswordValidatedInfo() {
+    }
+
     public UsernamePasswordValidatedInfo(String username, String password, EncryptionTypeEnums encryptionType) {
         this.username = username;
         this.password = password;
@@ -35,11 +39,13 @@ public class UsernamePasswordValidatedInfo implements ValidatedInfo {
     }
 
     @Override
+    @JsonIgnore
     public String getSubject() {
         return this.username;
     }
 
     @Override
+    @JsonIgnore
     public String getCredentials() {
         return this.password;
     }

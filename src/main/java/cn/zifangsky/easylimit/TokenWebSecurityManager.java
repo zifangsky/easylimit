@@ -9,7 +9,6 @@ import cn.zifangsky.easylimit.exception.authc.AuthenticationException;
 import cn.zifangsky.easylimit.exception.token.TokenException;
 import cn.zifangsky.easylimit.realm.Realm;
 import cn.zifangsky.easylimit.session.Session;
-import cn.zifangsky.easylimit.session.impl.TokenSessionContext;
 import cn.zifangsky.easylimit.session.impl.support.SimpleAccessRefreshToken;
 import cn.zifangsky.easylimit.session.impl.support.SimpleAccessToken;
 import cn.zifangsky.easylimit.session.impl.support.SimpleRefreshToken;
@@ -60,12 +59,11 @@ public class TokenWebSecurityManager extends DefaultWebSecurityManager{
     public SimpleAccessRefreshToken refreshAccessToken(SimpleRefreshToken simpleRefreshToken, PrincipalInfo principalInfo, Session session){
         TokenWebSessionManager sessionManager = (TokenWebSessionManager) this.getSessionManager();
 
-        return sessionManager.refreshAccessToken(simpleRefreshToken, principalInfo, session.getId());
+        return sessionManager.refreshAccessToken(simpleRefreshToken, principalInfo, session);
     }
 
 
-    @Override
-    public Access login(Access access, ValidatedInfo validatedInfo) throws AuthenticationException {
+    public Access login(Access access, ValidatedInfo validatedInfo, boolean createToken) throws AuthenticationException {
         //1. 通过 realm 获取 principalInfo
         PrincipalInfo principalInfo = null;
 
@@ -78,20 +76,19 @@ public class TokenWebSecurityManager extends DefaultWebSecurityManager{
         }
 
         //2. 创建Access Token和Refresh Token
-        TokenWebSessionManager sessionManager = (TokenWebSessionManager) this.getSessionManager();
-        Session session = access.getSession(false);
+        if(createToken){
+            TokenWebSessionManager sessionManager = (TokenWebSessionManager) this.getSessionManager();
+            Session session = access.getSession(false);
 
-        SimpleAccessToken accessToken = sessionManager.createAccessToken(principalInfo, session);
-        SimpleRefreshToken refreshToken = sessionManager.createRefreshToken(validatedInfo, accessToken);
+            SimpleAccessToken accessToken = sessionManager.createAccessToken(principalInfo, session);
+            SimpleRefreshToken refreshToken = sessionManager.createRefreshToken(validatedInfo, accessToken);
 
-        //3. 将之保存到session
-        session.setAttribute(TokenSessionContext.SIMPLE_ACCESS_TOKEN_KEY, accessToken);
-        session.setAttribute(TokenSessionContext.SIMPLE_REFRESH_TOKEN_KEY, refreshToken);
-
-        //4. 重新创建Access
-        return this.createAccess(principalInfo, access, accessToken, refreshToken);
+            //4. 重新创建Access
+            return this.createAccess(principalInfo, access, accessToken, refreshToken);
+        }else{
+            return this.createAccess(principalInfo, access);
+        }
     }
-
 
     /**
      * 用于登录成功之后重新创建{@link Access}

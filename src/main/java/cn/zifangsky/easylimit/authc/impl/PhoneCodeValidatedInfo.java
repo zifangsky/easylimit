@@ -1,6 +1,7 @@
 package cn.zifangsky.easylimit.authc.impl;
 
 import cn.zifangsky.easylimit.authc.ValidatedInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 基于“手机号码+短信验证码”的登录验证信息
@@ -22,17 +23,22 @@ public class PhoneCodeValidatedInfo implements ValidatedInfo {
      */
     private String code;
 
+    public PhoneCodeValidatedInfo() {
+    }
+
     public PhoneCodeValidatedInfo(String phone, String code) {
         this.phone = phone;
         this.code = code;
     }
 
     @Override
+    @JsonIgnore
     public String getSubject() {
         return this.phone;
     }
 
     @Override
+    @JsonIgnore
     public String getCredentials() {
         return this.code;
     }

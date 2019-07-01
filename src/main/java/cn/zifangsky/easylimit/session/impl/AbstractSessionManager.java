@@ -68,7 +68,7 @@ public abstract class AbstractSessionManager implements SessionManager {
     protected abstract Session createSession(SessionContext sessionContext);
 
     /**
-     * 真正的获取{@link Session}的逻辑
+     * 获取真正的{@link Session}的逻辑
      *
      * @param key key
      * @return cn.zifangsky.easylimit.session.Session

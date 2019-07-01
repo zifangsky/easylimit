@@ -72,7 +72,7 @@ public abstract class AbstractValidationSessionManager extends AbstractSessionMa
     protected abstract Session doCreateSession(SessionContext sessionContext);
 
     /**
-     * 真正的获取{@link Session}的逻辑
+     * 获取真正的{@link Session}的逻辑
      *
      * @param key key
      * @return cn.zifangsky.easylimit.session.Session

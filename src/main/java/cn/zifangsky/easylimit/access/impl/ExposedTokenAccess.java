@@ -67,7 +67,7 @@ public class ExposedTokenAccess extends ExposedAccess{
         //2. 如果当前处于未登录状态，则自动登录
         if(!this.getAuthenticated()){
             ValidatedInfo validatedInfo = simpleRefreshToken.getValidatedInfo();
-            this.login(validatedInfo);
+            this.login(validatedInfo, false);
         }
 
         //3. 刷新Access Token
@@ -83,8 +83,21 @@ public class ExposedTokenAccess extends ExposedAccess{
 
     @Override
     public void login(ValidatedInfo validatedInfo) throws AuthenticationException {
+        this.login(validatedInfo, true);
+    }
+
+    /**
+     * 登录
+     * @author zifangsky
+     * @date 2019/6/30 16:19
+     * @since 1.0.0
+     * @param validatedInfo 表单中的用户名、密码
+     * @param createToken 是否创建Token：普通登录需要创建；刷新Access Token在自动登录这一步不需要额外创建Token
+     */
+    public void login(ValidatedInfo validatedInfo, boolean createToken) throws AuthenticationException {
         //1. 调用securityManager执行登录操作
-        Access access = this.getSecurityManager().login(this, validatedInfo);
+        TokenWebSecurityManager securityManager = (TokenWebSecurityManager) this.getSecurityManager();
+        Access access = securityManager.login(this, validatedInfo, createToken);
 
         if(access instanceof ExposedTokenAccess){
             ExposedTokenAccess exposedAccess = (ExposedTokenAccess) access;
@@ -92,8 +105,11 @@ public class ExposedTokenAccess extends ExposedAccess{
             //2. 获取正确的登录认证信息、host、Access Token、Refresh Token
             this.setPrincipalInfo(exposedAccess.getPrincipalInfo());
             this.setHost(exposedAccess.getHost());
-            this.setAccessToken(exposedAccess.getAccessToken());
-            this.setRefreshToken(exposedAccess.getRefreshToken());
+
+            if(createToken){
+                this.setAccessToken(exposedAccess.getAccessToken());
+                this.setRefreshToken(exposedAccess.getRefreshToken());
+            }
         }
 
         //3. 设置已经登录认证通过

@@ -152,12 +152,12 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
      * @since 1.0.0
      * @param simpleRefreshToken Refresh Token
      * @param principalInfo 用户主体信息
-     * @param sessionId sessionId
+     * @param session session
      * @return cn.zifangsky.easylimit.session.impl.support.SimpleAccessRefreshToken
      */
-    public SimpleAccessRefreshToken refreshAccessToken(SimpleRefreshToken simpleRefreshToken, PrincipalInfo principalInfo, Serializable sessionId) {
+    public SimpleAccessRefreshToken refreshAccessToken(SimpleRefreshToken simpleRefreshToken, PrincipalInfo principalInfo, Session session) {
         //1. 生成新的Access Token
-        SimpleAccessToken newAccessToken = this.tokenOperateResolver.createAccessToken(principalInfo, this.tokenInfo, sessionId);
+        SimpleAccessToken newAccessToken = this.tokenOperateResolver.createAccessToken(principalInfo, this.tokenInfo, session.getId());
 
         //2. 移除失效的Access Token
         this.removeInvalidAccessToken(simpleRefreshToken.getAccessToken());
@@ -167,7 +167,11 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
         this.tokenDAO.updateAccessToken(newAccessToken);
         this.tokenDAO.updateRefreshToken(simpleRefreshToken);
 
-        //4. 返回Access Token和Refresh Token
+        //4. 将之保存到session
+        session.setAttribute(TokenSessionContext.SIMPLE_ACCESS_TOKEN_KEY, newAccessToken);
+        session.setAttribute(TokenSessionContext.SIMPLE_REFRESH_TOKEN_KEY, simpleRefreshToken);
+
+        //5. 返回Access Token和Refresh Token
         return new SimpleAccessRefreshToken(newAccessToken, simpleRefreshToken);
     }
 
