@@ -272,6 +272,17 @@ public abstract class AbstractValidationSessionManager extends AbstractSessionMa
     }
 
     /**
+     * 执行校验任务
+     * @author zifangsky
+     * @date 2019/7/1 10:35
+     * @since 1.0.0
+     */
+    public void performValidationTask(){
+        //校验session
+        this.validateSessions();
+    }
+
+    /**
      * 定时验证所有活动状态的{@link Session}，
      * 如果失效则需要更新其状态
      *

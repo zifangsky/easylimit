@@ -110,7 +110,7 @@ public class DefaultSessionValidationScheduled implements SessionValidationSched
     public void run() {
         LOGGER.debug(MessageFormat.format("Start the session validation task at:[{0}].", DateUtils.nowStr()));
 
-        this.validationSessionManager.validateSessions();
+        this.validationSessionManager.performValidationTask();
 
         LOGGER.debug(MessageFormat.format("End the session validation task at:[{0}].", DateUtils.nowStr()));
     }
