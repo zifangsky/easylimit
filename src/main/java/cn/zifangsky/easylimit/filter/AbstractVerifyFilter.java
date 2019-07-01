@@ -5,6 +5,7 @@ import cn.zifangsky.easylimit.common.Constants;
 import cn.zifangsky.easylimit.enums.DefaultTokenRespEnums;
 import cn.zifangsky.easylimit.enums.ProjectModeEnums;
 import cn.zifangsky.easylimit.filter.impl.support.TokenRespMsg;
+import cn.zifangsky.easylimit.utils.WebUtils;
 
 import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
@@ -31,16 +32,16 @@ public abstract class AbstractVerifyFilter extends AbstractAccessControlFilter{
 
     @Override
     protected boolean afterAccessDenied(HttpServletRequest request, HttpServletResponse response, String[] controlVal) throws Exception {
-        if(ProjectModeEnums.DEFAULT.equals(this.getProjectMode())){
+        if(ProjectModeEnums.DEFAULT.equals(this.getProjectMode()) && !WebUtils.isAjaxRequest(request)){
             Access access = this.getAccess(request, response);
 
             //如果还没有登录，则跳转到登录页面
             if(access != null && !access.isAuthenticated()){
-                this.saveSourceUrlAndRedirectToLoginPage(request, response);
+                this.saveSourceUrlAndRedirectToLoginPage(request, response, null);
             }else{
                 this.doRedirect(request, response, this.unauthorizedUrl);
             }
-        }else if(ProjectModeEnums.TOKEN.equals(this.getProjectMode())){
+        }else{
             this.generateTokenResponse(response, this.unauthorizedRespMsg);
         }
 

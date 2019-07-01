@@ -49,9 +49,9 @@ public class DefaultLogoutFilter extends AbstractAdviceFilter{
         }
 
         //3. 重定向或返回提示信息
-        if(ProjectModeEnums.DEFAULT.equals(this.getProjectMode())){
+        if(ProjectModeEnums.DEFAULT.equals(this.getProjectMode()) && !WebUtils.isAjaxRequest(request)){
             this.doRedirect(WebUtils.toHttp(request), WebUtils.toHttp(response), this.logoutRedirectUrl);
-        }else if(ProjectModeEnums.TOKEN.equals(this.getProjectMode())){
+        }else{
             this.generateTokenResponse(WebUtils.toHttp(response), this.logoutRespMsg);
         }
 

@@ -24,6 +24,11 @@ public class Constants {
     public static final String DEFAULT_COOKIE_SESSION_ID_NAME = PROJECT_NAME + "_session_id";
 
     /**
+     * 表示当前session已经被“踢出”的标识的参数名
+     */
+    public static final String KICK_OUT_OLD_SESSIONS_NAME = PROJECT_NAME + "_kicked_out";
+
+    /**
      * Ajax请求的Header
      */
     public static final String AJAX_REQUEST_HEADER = "XMLHttpRequest";

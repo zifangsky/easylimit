@@ -29,7 +29,7 @@ public enum DefaultTokenRespEnums {
     /**
      * 被踢出
      */
-    KICKOUT(401, "kickout", "您的账号已在其他设备登录，若非本人操作，请立即重新登录并修改密码！"),
+    KICKOUT(401, "kicked_out", "您的账号已在其他设备登录，若非本人操作，请立即重新登录并修改密码！"),
     /**
      * 没有权限
      */

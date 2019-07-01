@@ -70,9 +70,9 @@ public abstract class AbstractAccessControlFilter extends AbstractPathFilter{
      * <p>1. 保存来源URL</p>
      * <p>1. 重定向到登录页面</p>
      */
-    protected void saveSourceUrlAndRedirectToLoginPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void saveSourceUrlAndRedirectToLoginPage(HttpServletRequest request, HttpServletResponse response, String param) throws IOException {
         this.saveSourceUrl(request);
-        this.redirectToLoginPage(request, response);
+        this.redirectToLoginPage(request, response, param);
     }
 
     /**
@@ -85,8 +85,9 @@ public abstract class AbstractAccessControlFilter extends AbstractPathFilter{
     /**
      * 重定向到登录页面
      */
-    protected void redirectToLoginPage(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        this.doRedirect(request, response, this.loginUrl);
+    protected void redirectToLoginPage(HttpServletRequest request, HttpServletResponse response, String param) throws IOException {
+        String resultUrl = (param != null ? (this.loginUrl + param) : this.loginUrl);
+        this.doRedirect(request, response, resultUrl);
     }
 
     protected Access getAccess(HttpServletRequest request, HttpServletResponse response){

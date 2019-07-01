@@ -1,5 +1,8 @@
 package cn.zifangsky.easylimit.session.impl;
 
+import cn.zifangsky.easylimit.access.impl.DefaultAccessContext;
+import cn.zifangsky.easylimit.authc.PrincipalInfo;
+import cn.zifangsky.easylimit.common.Constants;
 import cn.zifangsky.easylimit.exception.session.SessionException;
 import cn.zifangsky.easylimit.exception.session.UnknownSessionException;
 import cn.zifangsky.easylimit.session.Session;
@@ -79,6 +82,43 @@ public abstract class AbstractWebSessionManager extends AbstractValidationSessio
      * @return java.io.Serializable
      */
     public abstract Serializable getSessionId(ServletRequest request, ServletResponse response);
+
+    /**
+     * 给用户旧会话添加一个“踢出”标识
+     */
+    public synchronized void kickOutOldSessions(String account, Session currentSession){
+        if(account == null){
+            throw new IllegalArgumentException("Parameter account cannot be empty.");
+        }
+        if(currentSession == null){
+            throw new IllegalArgumentException("Parameter currentSession cannot be empty.");
+        }
+
+        //1. 获取所有活跃状态的session
+        Set<Session> activeSessions = this.sessionDAO.getActiveSessions();
+
+        //2. 遍历并找出指定用户的旧会话
+        if(activeSessions != null && activeSessions.size() > 0){
+            for(Session session : activeSessions){
+                //不处理当前session
+                if(currentSession.getId().equals(session.getId())){
+                    continue;
+                }
+
+                Object attribute = session.getAttribute(DefaultAccessContext.PRINCIPAL_INFO_SESSION_KEY);
+                //不处理还未登录的session
+                if(attribute == null){
+                    continue;
+                }
+
+                PrincipalInfo principalInfo = (PrincipalInfo) attribute;
+                if(account.equals(principalInfo.getAccount())){
+                    //3. 给用户旧会话添加一个“踢出”标识
+                    session.setAttribute(Constants.KICK_OUT_OLD_SESSIONS_NAME, true);
+                }
+            }
+        }
+    }
 
     @Override
     protected Set<Session> getActiveSessions() {

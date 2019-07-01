@@ -50,6 +50,11 @@ public class DefaultWebSecurityManager implements SecurityManager{
      */
     private AccessFactory accessFactory;
 
+    /**
+     * 是否踢出当前用户的旧会话
+     */
+    private boolean kickOutOldSessions;
+
     public DefaultWebSecurityManager(Realm realm, SessionManager sessionManager) {
         this(realm, sessionManager, new DefaultAccessFactory());
     }
@@ -58,6 +63,8 @@ public class DefaultWebSecurityManager implements SecurityManager{
         this.realm = realm;
         this.sessionManager = sessionManager;
         this.accessFactory = accessFactory;
+        //默认不踢出当前用户的旧会话
+        this.kickOutOldSessions = false;
     }
 
     @Override
@@ -73,7 +80,12 @@ public class DefaultWebSecurityManager implements SecurityManager{
             throw e;
         }
 
-        //2. 重新创建Access
+        //2. 判断是否需要踢出当前用户的旧会话，如果是则给旧会话添加一个“踢出”标识
+        if(this.kickOutOldSessions){
+            this.kickOutOldSessions(access, principalInfo);
+        }
+
+        //3. 重新创建Access
         return this.createAccess(principalInfo, access);
     }
 
@@ -96,6 +108,16 @@ public class DefaultWebSecurityManager implements SecurityManager{
 
     protected void beforeLogout(Access access) {
         //TODO RememberMe删除
+    }
+
+    /**
+     * 给用户旧会话添加一个“踢出”标识
+     */
+    protected void kickOutOldSessions(Access access, PrincipalInfo principalInfo){
+        if(this.sessionManager instanceof AbstractWebSessionManager){
+            AbstractWebSessionManager webSessionManager = (AbstractWebSessionManager) this.sessionManager;
+            webSessionManager.kickOutOldSessions(principalInfo.getAccount(), access.getSession(false));
+        }
     }
 
     /**
@@ -461,5 +483,13 @@ public class DefaultWebSecurityManager implements SecurityManager{
 
     public void setAccessFactory(AccessFactory accessFactory) {
         this.accessFactory = accessFactory;
+    }
+
+    public boolean isKickOutOldSessions() {
+        return kickOutOldSessions;
+    }
+
+    public void setKickOutOldSessions(boolean kickOutOldSessions) {
+        this.kickOutOldSessions = kickOutOldSessions;
     }
 }
