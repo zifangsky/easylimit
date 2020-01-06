@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>cn.zifangsky</groupId>
-	<artifactId>easylimit</artifactId>
+    <groupId>cn.zifangsky</groupId>
+    <artifactId>easylimit</artifactId>
     <packaging>jar</packaging>
-	<version>0.9.3-SNAPSHOT</version>
+    <version>0.9.3-SNAPSHOT</version>
 
-	<name>Easy Limit</name>
-	<description>一个简单的权限控制框架</description>
+    <name>Easy Limit</name>
+    <description>一个简单的权限控制框架</description>
 
-	<properties>
+    <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -20,35 +20,35 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <!-- 打包时忽略测试代码 -->
         <skipTests>true</skipTests>
-		<!-- JUnit单元测试 -->
-		<junit>4.12</junit>
-		<!-- Apache Commons系列公共库 -->
-		<commons-lang3>3.8.1</commons-lang3>
-		<commons-io>2.6</commons-io>
-		<commons-codec>1.12</commons-codec>
-		<commons-text>1.6</commons-text>
-		<commons-beanutils>1.9.3</commons-beanutils>
-		<!-- Apache HttpClient -->
-		<httpclient>4.5.7</httpclient>
-		<!-- Fastjson -->
-		<fastjson>1.2.56</fastjson>
-		<!-- Jackson -->
-		<jackson>2.9.8</jackson>
-		<!-- SLF4J -->
-		<slf4j>1.7.26</slf4j>
+        <!-- JUnit单元测试 -->
+        <junit>4.12</junit>
+        <!-- Apache Commons系列公共库 -->
+        <commons-lang3>3.8.1</commons-lang3>
+        <commons-io>2.6</commons-io>
+        <commons-codec>1.12</commons-codec>
+        <commons-text>1.6</commons-text>
+        <commons-beanutils>1.9.3</commons-beanutils>
+        <!-- Apache HttpClient -->
+        <httpclient>4.5.7</httpclient>
+        <!-- Fastjson -->
+        <fastjson>1.2.60</fastjson>
+        <!-- Jackson -->
+        <jackson>2.9.8</jackson>
+        <!-- SLF4J -->
+        <slf4j>1.7.26</slf4j>
         <!-- AspectJ Weaver -->
         <aspectjweaver>1.9.4</aspectjweaver>
-		<!-- Java Servlet API -->
-		<javax.servlet-api>4.0.1</javax.servlet-api>
+        <!-- Java Servlet API -->
+        <javax.servlet-api>4.0.1</javax.servlet-api>
         <!-- Spring Web MVC -->
         <spring>5.1.5.RELEASE</spring>
         <!-- Jedis -->
         <jedis>3.0.1</jedis>
         <!-- Spring Data Redis -->
         <spring-data-redis>2.1.6.RELEASE</spring-data-redis>
-	</properties>
+    </properties>
 
-	<dependencies>
+    <dependencies>
         <!-- Junit -->
         <dependency>
             <groupId>junit</groupId>
@@ -170,7 +170,7 @@
         </dependency>
     </dependencies>
 
-	<build>
+    <build>
         <plugins>
             <!--配置生成源码包-->
             <plugin>
@@ -207,6 +207,6 @@
                 <filtering>false</filtering>
             </resource>
         </resources>
-	</build>
+    </build>
 
 </project>
