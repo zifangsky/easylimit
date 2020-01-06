@@ -81,7 +81,7 @@ public class DefaultWebSecurityManager implements SecurityManager{
         }
 
         //2. 判断是否需要踢出当前用户的旧会话，如果是则给旧会话添加一个“踢出”标识
-        if(this.kickOutOldSessions){
+        if(this.isKickOutOldSessions()){
             this.kickOutOldSessions(access, principalInfo);
         }
 
@@ -349,6 +349,11 @@ public class DefaultWebSecurityManager implements SecurityManager{
     @Override
     public PrincipalInfo createPrincipalInfo(ValidatedInfo validatedInfo) throws AuthenticationException{
         return this.realm.createPrincipalInfo(validatedInfo);
+    }
+
+    @Override
+    public PrincipalInfo createPrincipalInfoWithNoAuthentication(ValidatedInfo validatedInfo) throws AuthenticationException {
+        return this.realm.createPrincipalInfoWithNoAuthentication(validatedInfo);
     }
 
     @Override

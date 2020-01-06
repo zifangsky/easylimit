@@ -97,7 +97,7 @@ public class ExposedTokenAccess extends ExposedAccess{
     public void login(ValidatedInfo validatedInfo, boolean createToken) throws AuthenticationException {
         //1. 调用securityManager执行登录操作
         TokenWebSecurityManager securityManager = (TokenWebSecurityManager) this.getSecurityManager();
-        Access access = securityManager.login(this, validatedInfo, createToken);
+        Access access = createToken ? securityManager.login(this, validatedInfo) : securityManager.loginWithNoAuthentication(this, validatedInfo);
 
         if(access instanceof ExposedTokenAccess){
             ExposedTokenAccess exposedAccess = (ExposedTokenAccess) access;

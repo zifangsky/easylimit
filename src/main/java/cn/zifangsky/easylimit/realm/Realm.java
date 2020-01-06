@@ -20,7 +20,7 @@ import java.util.Collection;
 public interface Realm {
 
     /**
-     * 通过登录认证信息创建正确的认证信息
+     * 通过登录认证信息创建用户主体信息
      * @author zifangsky
      * @date 2019/4/3 18:29
      * @since 1.0.0
@@ -29,6 +29,17 @@ public interface Realm {
      * @throws AuthenticationException AuthenticationException
      */
     PrincipalInfo createPrincipalInfo(ValidatedInfo validatedInfo) throws AuthenticationException;
+
+    /**
+     * 免认证创建用户主体信息
+     * @author zifangsky
+     * @date 2020/1/6 14:27
+     * @since 1.0.0
+     * @param validatedInfo 登录认证信息
+     * @return cn.zifangsky.easylimit.authc.Principal
+     * @throws AuthenticationException AuthenticationException
+     */
+    PrincipalInfo createPrincipalInfoWithNoAuthentication(ValidatedInfo validatedInfo) throws AuthenticationException;
 
     /**
      * 通过用户主体创建“角色+权限”信息

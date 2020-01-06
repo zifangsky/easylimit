@@ -2,6 +2,7 @@ package cn.zifangsky.easylimit.realm.impl;
 
 import cn.zifangsky.easylimit.authc.PrincipalInfo;
 import cn.zifangsky.easylimit.authc.ValidatedInfo;
+import cn.zifangsky.easylimit.authc.impl.PhoneCodeValidatedInfo;
 import cn.zifangsky.easylimit.authc.impl.UsernamePasswordValidatedInfo;
 import cn.zifangsky.easylimit.cache.Cache;
 import cn.zifangsky.easylimit.common.Constants;
@@ -78,8 +79,46 @@ public abstract class AbstractAuthenticationRealm implements Realm{
      */
     protected abstract PrincipalInfo doGetPrincipalInfo(ValidatedInfo validatedInfo) throws AuthenticationException;
 
+    /**
+     * 校验登录时输入的验证码是否正确
+     * @author zifangsky
+     * @date 2020/1/3 15:41
+     * @since 1.0.0
+     * @param phoneCodeValidatedInfo 登录时来至外部的“手机号+验证码”信息
+     * @param principalInfo 数据库中正确的用户主体信息
+     * @return boolean
+     */
+    protected abstract boolean verifyPhoneCode(PhoneCodeValidatedInfo phoneCodeValidatedInfo, PrincipalInfo principalInfo);
+
+    /**
+     * “用户名+密码”模式，校验自定义的密码加密方式
+     * @author zifangsky
+     * @date 2019/4/11 16:24
+     * @since 1.0.0
+     * @param usernamePasswordValidatedInfo 登录时来至外部的需要验证的信息
+     * @param principalInfo 数据库中正确的用户主体信息
+     */
+    protected abstract boolean verifyCustomUsernamePasswordValidatedInfo(UsernamePasswordValidatedInfo usernamePasswordValidatedInfo, PrincipalInfo principalInfo);
+
     @Override
     public PrincipalInfo createPrincipalInfo(ValidatedInfo validatedInfo) throws AuthenticationException {
+        //1. 创建用户实体信息
+        PrincipalInfo principalInfo = this.createPrincipalInfoWithNoAuthentication(validatedInfo);
+
+        //2. 校验“密码/验证码”是否匹配
+        if(principalInfo != null){
+            this.checkCredentialsInfo(validatedInfo, principalInfo);
+        }else{
+            String msg = MessageFormat.format("No PrincipalInfo found for submitted ValidatedInfo[(0)].", validatedInfo);
+            LOGGER.error(msg);
+            throw new NoPrincipalInfoException(msg);
+        }
+
+        return principalInfo;
+    }
+
+    @Override
+    public PrincipalInfo createPrincipalInfoWithNoAuthentication(ValidatedInfo validatedInfo) throws AuthenticationException {
         if(validatedInfo == null){
             throw new IllegalArgumentException("Parameter validatedInfo cannot be empty.");
         }
@@ -95,15 +134,6 @@ public abstract class AbstractAuthenticationRealm implements Realm{
                 //尝试缓存用户实体信息
                 this.cachePrincipalInfo(validatedInfo, principalInfo);
             }
-        }
-
-        //3. 校验用户名密码
-        if(principalInfo != null){
-            this.checkCredentialsInfo(validatedInfo, principalInfo);
-        }else{
-            String msg = MessageFormat.format("No PrincipalInfo found for submitted ValidatedInfo[(0)].", validatedInfo);
-            LOGGER.error(msg);
-            throw new NoPrincipalInfoException(msg);
         }
 
         return principalInfo;
@@ -124,36 +154,46 @@ public abstract class AbstractAuthenticationRealm implements Realm{
      * @throws AuthenticationException AuthenticationException
      */
     protected void checkCredentialsInfo(ValidatedInfo validatedInfo, PrincipalInfo principalInfo) throws AuthenticationException{
-        //默认只实现“用户名+密码”模式的校验
+        //“用户名+密码”模式的校验
         if(validatedInfo instanceof UsernamePasswordValidatedInfo){
             UsernamePasswordValidatedInfo usernamePasswordValidatedInfo = (UsernamePasswordValidatedInfo) validatedInfo;
+            boolean correct = this.verifyUsernamePassword(usernamePasswordValidatedInfo, principalInfo);
 
-            if(EncryptionTypeEnums.CUSTOM.equals(usernamePasswordValidatedInfo.getEncryptionType())){
-                this.checkCustomUsernamePasswordValidatedInfo(usernamePasswordValidatedInfo, principalInfo);
-            }else{
-                boolean correct = EncryptionTypeEnums.verifyCredentials(usernamePasswordValidatedInfo.getEncryptionType(),
-                        principalInfo.getPassword(), validatedInfo.getCredentials());
+            //密码校验失败，则抛出异常
+            if(!correct){
+                String msg = MessageFormat.format("Submitted credentials for validatedInfo[(0)] did not match the expected credentials.", usernamePasswordValidatedInfo);
+                throw new IncorrectCredentialsException(msg);
+            }
+        }
+        //“手机号+验证码”模式的校验
+        else if(validatedInfo instanceof PhoneCodeValidatedInfo){
+            PhoneCodeValidatedInfo phoneCodeValidatedInfo = (PhoneCodeValidatedInfo) validatedInfo;
+            boolean correct = this.verifyPhoneCode(phoneCodeValidatedInfo, principalInfo);
 
-                //密码校验失败，则抛出异常
-                if(!correct){
-                    String msg = MessageFormat.format("Submitted credentials for validatedInfo[(0)] did not match the expected credentials.", validatedInfo);
-                    throw new IncorrectCredentialsException(msg);
-                }
+            //手机验证码校验失败，则抛出异常
+            if(!correct){
+                String msg = MessageFormat.format("Submitted credentials for validatedInfo[(0)] did not match the expected credentials.", phoneCodeValidatedInfo);
+                throw new IncorrectCredentialsException(msg);
             }
         }
     }
 
     /**
-     * “用户名+密码”模式，校验自定义的密码加密方式
+     * 校验登录时输入的密码是否正确
      * @author zifangsky
-     * @date 2019/4/11 16:24
+     * @date 2020/1/3 15:41
      * @since 1.0.0
-     * @param validatedInfo 登录时来至外部的需要验证的信息
+     * @param usernamePasswordValidatedInfo 登录时来至外部的“用户名+密码”信息
      * @param principalInfo 数据库中正确的用户主体信息
-     * @throws AuthenticationException AuthenticationException
+     * @return boolean
      */
-    protected void checkCustomUsernamePasswordValidatedInfo(UsernamePasswordValidatedInfo validatedInfo, PrincipalInfo principalInfo) throws AuthenticationException{
-
+    protected boolean verifyUsernamePassword(UsernamePasswordValidatedInfo usernamePasswordValidatedInfo, PrincipalInfo principalInfo){
+        if(EncryptionTypeEnums.CUSTOM.equals(usernamePasswordValidatedInfo.getEncryptionType())){
+            return this.verifyCustomUsernamePasswordValidatedInfo(usernamePasswordValidatedInfo, principalInfo);
+        }else{
+            return EncryptionTypeEnums.verifyCredentials(usernamePasswordValidatedInfo.getEncryptionType(),
+                    principalInfo.getPassword(), usernamePasswordValidatedInfo.getPassword());
+        }
     }
 
     /**

@@ -58,6 +58,10 @@ public class UsernamePasswordValidatedInfo implements ValidatedInfo {
         return username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

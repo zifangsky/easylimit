@@ -51,6 +51,14 @@ public class PhoneCodeValidatedInfo implements ValidatedInfo {
         this.code = code;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
     @Override
     public String toString() {
         return "PhoneCodeValidatedInfo{" +
