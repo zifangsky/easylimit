@@ -55,8 +55,7 @@ public class DefaultMemoryCache implements Cache<Serializable, Object> {
         }
 
         //数据Map
-        ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
-        this.initialize(cacheName, dataMap);
+        ConcurrentHashMap<Serializable, Object> dataMap = this.getMap(cacheName);
 
         if(value != null){
             dataMap.put(key, value);
@@ -68,8 +67,7 @@ public class DefaultMemoryCache implements Cache<Serializable, Object> {
     @Override
     public void putAll(String cacheName, Map<Serializable, Object> sources) throws CacheException {
         //数据Map
-        ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
-        this.initialize(cacheName, dataMap);
+        ConcurrentHashMap<Serializable, Object> dataMap = this.getMap(cacheName);
 
         if(sources != null && sources.size() > 0){
             dataMap.putAll(sources);
@@ -139,12 +137,17 @@ public class DefaultMemoryCache implements Cache<Serializable, Object> {
     }
 
     /**
-     * 初始化
+     * 根据cacheName获取缓存Map
      */
-    private void initialize(String cacheName, ConcurrentHashMap<Serializable, Object> dataMap) {
+    private ConcurrentHashMap<Serializable, Object> getMap(String cacheName){
+        //数据Map
+        ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
+
         if(dataMap == null){
             dataMap = new ConcurrentHashMap<>();
             memoryCacheMap.put(cacheName, dataMap);
         }
+
+        return dataMap;
     }
 }
