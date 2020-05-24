@@ -28,7 +28,7 @@ public class RandomCharacterSessionIdFactory implements SessionIdFactory {
 
     public RandomCharacterSessionIdFactory(int strLen) {
         if (strLen < 1) {
-            throw new IllegalArgumentException("strLen can't be less than 1");
+            throw new IllegalArgumentException("strLen cannot be less than 1");
         }
 
         this.strLen = strLen;

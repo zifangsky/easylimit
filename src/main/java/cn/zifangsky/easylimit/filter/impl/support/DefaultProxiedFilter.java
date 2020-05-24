@@ -68,7 +68,7 @@ public class DefaultProxiedFilter extends AbstractProxiedFilter {
             try {
                 session.refresh();
             }catch (Exception e){
-                LOGGER.error("The session.refresh() method has failed", e);
+                LOGGER.error("The session.refresh() method failed to execute.", e);
             }
         }
     }

@@ -98,8 +98,12 @@ public class StringUtils {
      *     </tr>
      *
      *     <tr>
-     *         <td>login, roles[reviewer, subscriber], perms[list, edit]</td>
-     *         <td>result[0]: login <br/> result[1]: roles[reviewer, subscriber] <br/> result[2]: perms[list, edit]</td>
+     *         <td>reviewer, subscriber</td>
+     *         <td>result[0]: reviewer <br/> result[1]: subscriber</td>
+     *     </tr>
+     *     <tr>
+     *         <td>list, edit</td>
+     *         <td>result[0]: list <br/> result[1]: edit</td>
      *     </tr>
      *
      * </table>

@@ -81,6 +81,7 @@ public abstract class AbstractAuthenticationRealm implements Realm{
 
     /**
      * 校验登录时输入的验证码是否正确
+     * <p>Note: 使用时需要复写此方法</p>
      * @author zifangsky
      * @date 2020/1/3 15:41
      * @since 1.0.0
@@ -88,17 +89,22 @@ public abstract class AbstractAuthenticationRealm implements Realm{
      * @param principalInfo 数据库中正确的用户主体信息
      * @return boolean
      */
-    protected abstract boolean verifyPhoneCode(PhoneCodeValidatedInfo phoneCodeValidatedInfo, PrincipalInfo principalInfo);
+    protected boolean verifyPhoneCode(PhoneCodeValidatedInfo phoneCodeValidatedInfo, PrincipalInfo principalInfo){
+        return false;
+    }
 
     /**
      * “用户名+密码”模式，校验自定义的密码加密方式
+     * <p>Note: 使用时需要复写此方法</p>
      * @author zifangsky
      * @date 2019/4/11 16:24
      * @since 1.0.0
      * @param usernamePasswordValidatedInfo 登录时来至外部的需要验证的信息
      * @param principalInfo 数据库中正确的用户主体信息
      */
-    protected abstract boolean verifyCustomUsernamePasswordValidatedInfo(UsernamePasswordValidatedInfo usernamePasswordValidatedInfo, PrincipalInfo principalInfo);
+    protected boolean verifyCustomUsernamePasswordValidatedInfo(UsernamePasswordValidatedInfo usernamePasswordValidatedInfo, PrincipalInfo principalInfo){
+        return false;
+    }
 
     @Override
     public PrincipalInfo createPrincipalInfo(ValidatedInfo validatedInfo) throws AuthenticationException {

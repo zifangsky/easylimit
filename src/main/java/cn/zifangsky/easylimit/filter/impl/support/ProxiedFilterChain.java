@@ -48,7 +48,7 @@ public class ProxiedFilterChain implements FilterChain {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
         if(this.beforeFilters == null || this.beforeFilters.size() == this.index){
-            LOGGER.debug("Now proceed to the original FilterChain");
+            LOGGER.debug("Now proceed to the original FilterChain.");
             this.original.doFilter(request, response);
         }else{
             this.beforeFilters.get(this.index++).doFilter(request, response, this);

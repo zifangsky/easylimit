@@ -148,9 +148,9 @@ public class DefaultFilterChainManager implements FilterChainManager {
             }else{
                 //存在filter控制值的情况
                 List<String> controlValList = StringUtils.splitByComma(controlVal);
-                String[] controlValAray = controlValList.toArray(new String[controlValList.size()]);
+                String[] controlValArray = controlValList.toArray(new String[controlValList.size()]);
 
-                this.addToFilterChain(patternPath, nameControlArray[0], controlValAray);
+                this.addToFilterChain(patternPath, nameControlArray[0], controlValArray);
             }
         }
     }
@@ -165,7 +165,7 @@ public class DefaultFilterChainManager implements FilterChainManager {
         //1. 获取filter
         Filter filter = availableFilterMap.get(filterName);
         if(filter == null){
-            throw new IllegalArgumentException("Parameter filter cannot be empty.");
+            throw new IllegalArgumentException("Cannot get available Filter by filterName.");
         }
 
         //2. 给filter添加控制值
