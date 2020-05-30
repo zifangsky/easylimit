@@ -14,7 +14,6 @@ import java.util.regex.Pattern;
  * @since 1.0.0
  */
 public class StringUtils {
-    private static final String CAPITALS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     /**
      * 匹配形如 <b>login, roles[reviewer, subscriber], perms[list, edit]</b> 的字符串
@@ -35,14 +34,80 @@ public class StringUtils {
     /**
      * 获取长度为num的随机数
      *
-     * @param num 生成的字符串长度
+     * @param length 生成的字符串长度
      */
-    public static String getRandomStr(final int num) {
-        final StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 1; i <= num; i++) {
-            stringBuilder.append(CAPITALS.charAt(new Random().nextInt(CAPITALS.length())));
+    public static String getRandomStr(int length) {
+        if(length < 1){
+            return "";
         }
-        return stringBuilder.toString();
+
+        char[] chars = new char[length];
+        Random rnd = new Random();
+
+        //1. 填充前几个字符
+        chars[nextIndex(chars, rnd)] = nextUpperLetter(rnd);
+        if(length >= 2){
+            chars[nextIndex(chars, rnd)] = nextLowerLetter(rnd);
+        }
+        if(length >= 3){
+            chars[nextIndex(chars, rnd)] = nextNumLetter(rnd);
+        }
+
+        //2. 填补其他位置的字符
+        for (int i = 3; i < length; i++) {
+            if (chars[i] == 0) {
+                chars[i] = nextChar(rnd);
+            }
+        }
+
+        //3. 返回结果
+        return new String(chars);
+    }
+
+    /**
+     * 返回一个随机的字符
+     */
+    private static char nextChar(Random rnd) {
+        switch (rnd.nextInt(3)) {
+            case 0:
+                return (char) ('a' + rnd.nextInt(26));
+            case 1:
+                return (char) ('A' + rnd.nextInt(26));
+            default:
+                return (char) ('0' + rnd.nextInt(10));
+        }
+    }
+
+    /**
+     * 查找一个char数组中还没有填充字符的位置
+     */
+    private static int nextIndex(char[] chars, Random rnd) {
+        int index = rnd.nextInt(chars.length);
+        while (chars[index] != 0) {
+            index = rnd.nextInt(chars.length);
+        }
+        return index;
+    }
+
+    /**
+     * 返回一个随机的大写字母
+     */
+    private static char nextUpperLetter(Random rnd) {
+        return (char) ('A' + rnd.nextInt(26));
+    }
+
+    /**
+     * 返回一个随机的小写字母
+     */
+    private static char nextLowerLetter(Random rnd) {
+        return (char) ('a' + rnd.nextInt(26));
+    }
+
+    /**
+     * 返回一个随机的数字
+     */
+    private static char nextNumLetter(Random rnd) {
+        return (char) ('0' + rnd.nextInt(10));
     }
 
     /**
