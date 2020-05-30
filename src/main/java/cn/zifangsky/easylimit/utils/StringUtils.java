@@ -44,7 +44,7 @@ public class StringUtils {
         char[] chars = new char[length];
         Random rnd = new Random();
 
-        //1. 填充前几个字符
+        //1. 分别使用随机的大写字母、小写字母、数字填充数组中的几个位置
         chars[nextIndex(chars, rnd)] = nextUpperLetter(rnd);
         if(length >= 2){
             chars[nextIndex(chars, rnd)] = nextLowerLetter(rnd);
@@ -53,8 +53,8 @@ public class StringUtils {
             chars[nextIndex(chars, rnd)] = nextNumLetter(rnd);
         }
 
-        //2. 填补其他位置的字符
-        for (int i = 3; i < length; i++) {
+        //2. 然后继续填充其他位置的字符
+        for (int i = 0; i < length; i++) {
             if (chars[i] == 0) {
                 chars[i] = nextChar(rnd);
             }
