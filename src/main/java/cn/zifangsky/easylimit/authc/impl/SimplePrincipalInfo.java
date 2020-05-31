@@ -74,7 +74,7 @@ public class SimplePrincipalInfo implements PrincipalInfo {
     @Override
     public String toString() {
         return "SimplePrincipalInfo{" +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
                 ", password='it doesn't show up here'" + '\'' +
                 '}';
     }

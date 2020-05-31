@@ -92,7 +92,7 @@ public class CookieWebSessionManager extends AbstractWebSessionManager {
         //2. 删除cookie中的sessionId
         if(this.enableSessionIdCookie){
             Serializable sessionId = session.getId();
-            LOGGER.debug(MessageFormat.format("Session with id[{0}] has stopped, and cookieName[{1}] in cookie will be deleted next.", sessionId, this.sessionIdCookieInfo.getName()));
+            LOGGER.debug(MessageFormat.format("Session with id[{0}] has stopped, and cookieName[{1}] in cookie will be deleted soon.", sessionId, this.sessionIdCookieInfo.getName()));
             this.removeCookieSessionId(request, response);
         }
     }
@@ -106,7 +106,7 @@ public class CookieWebSessionManager extends AbstractWebSessionManager {
         //2. 删除cookie中的sessionId
         if(this.enableSessionIdCookie){
             Serializable sessionId = session.getId();
-            LOGGER.debug(MessageFormat.format("Session with id[{0}] has expired, and cookieName[{1}] in cookie will be deleted next.", sessionId, this.sessionIdCookieInfo.getName()));
+            LOGGER.debug(MessageFormat.format("Session with id[{0}] has expired, and cookieName[{1}] in cookie will be deleted soon.", sessionId, this.sessionIdCookieInfo.getName()));
             this.removeCookieSessionId(request, response);
         }
     }
