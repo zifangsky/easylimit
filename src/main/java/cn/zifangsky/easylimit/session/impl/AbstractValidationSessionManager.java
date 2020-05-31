@@ -291,7 +291,7 @@ public abstract class AbstractValidationSessionManager extends AbstractSessionMa
      * @since 1.0.0
      */
     public void validateSessions() {
-        LOGGER.info("Start validating all active sessions.");
+        LOGGER.info("Start to validate all active sessions...");
         //1. 获取所有可用状态的session
         Set<Session> activeSessions = this.getActiveSessions();
 
