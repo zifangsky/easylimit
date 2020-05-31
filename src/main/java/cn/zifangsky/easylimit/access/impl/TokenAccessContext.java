@@ -19,12 +19,12 @@ public class TokenAccessContext extends DefaultAccessContext {
     /**
      * {@link SimpleAccessToken}的key
      */
-    private static final String SIMPLE_ACCESS_TOKEN_KEY = TokenAccessContext.class.getName() + ":simple_access_token";
+    public static final String SIMPLE_ACCESS_TOKEN_KEY = TokenAccessContext.class.getName() + ":simple_access_token";
 
     /**
      * {@link SimpleRefreshToken}的key
      */
-    private static final String SIMPLE_REFRESH_TOKEN_KEY = TokenAccessContext.class.getName() + ":simple_refresh_token";
+    public static final String SIMPLE_REFRESH_TOKEN_KEY = TokenAccessContext.class.getName() + ":simple_refresh_token";
 
     public SimpleAccessToken acquireAccessToken() {
         SimpleAccessToken accessToken = this.getSimpleAccessToken();

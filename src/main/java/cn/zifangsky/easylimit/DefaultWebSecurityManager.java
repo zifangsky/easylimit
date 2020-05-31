@@ -101,7 +101,7 @@ public class DefaultWebSecurityManager implements SecurityManager{
             this.onLogout(principalInfo);
         }
 
-        //2. 停止session
+        //2. 停用session
         this.stopSession(access);
     }
 
@@ -146,12 +146,8 @@ public class DefaultWebSecurityManager implements SecurityManager{
 
     @Override
     public Access createAccess(AccessContext accessContext) {
-        //1. 设置初始的环境变量
-        this.setHostToContext(accessContext);
-        this.setSecurityManagerToContext(accessContext);
-        this.setSessionToContext(accessContext);
-        this.setPrincipalInfoToContext(accessContext);
-        this.setAuthenticatedToContext(accessContext);
+        //1. 初始化基本的环境变量
+        this.initializeBasicContextParams(accessContext);
 
         //2. 调用真正的创建方法
         Access access = this.doCreateAccess(accessContext);
@@ -160,6 +156,17 @@ public class DefaultWebSecurityManager implements SecurityManager{
         this.saveToSession(accessContext);
 
         return access;
+    }
+
+    /**
+     * 设置初始环境变量
+     */
+    protected void initializeBasicContextParams(AccessContext accessContext){
+        this.setHostToContext(accessContext);
+        this.setSecurityManagerToContext(accessContext);
+        this.setSessionToContext(accessContext);
+        this.setPrincipalInfoToContext(accessContext);
+        this.setAuthenticatedToContext(accessContext);
     }
 
     /**

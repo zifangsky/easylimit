@@ -29,42 +29,42 @@ public class DefaultAccessContext extends MapContext implements AccessContext {
     /**
      * host的key
      */
-    private static final String HOST_KEY = DefaultAccessContext.class.getName() + ":host";
+    public static final String HOST_KEY = DefaultAccessContext.class.getName() + ":host";
 
     /**
      * sessionId的key
      */
-    private static final String SESSION_ID_KEY = DefaultAccessContext.class.getName() + ":session_id";
+    public static final String SESSION_ID_KEY = DefaultAccessContext.class.getName() + ":session_id";
 
     /**
      * {@link Session}的key
      */
-    private static final String SESSION_KEY = DefaultAccessContext.class.getName() + ":session";
+    public static final String SESSION_KEY = DefaultAccessContext.class.getName() + ":session";
 
     /**
      * {@link ServletRequest}的key
      */
-    private static final String SERVLET_REQUEST_KEY = DefaultAccessContext.class.getName() + ":servlet_request";
+    public static final String SERVLET_REQUEST_KEY = DefaultAccessContext.class.getName() + ":servlet_request";
 
     /**
      * {@link ServletResponse}的key
      */
-    private static final String SERVLET_RESPONSE_KEY = DefaultAccessContext.class.getName() + ":servlet_response";
+    public static final String SERVLET_RESPONSE_KEY = DefaultAccessContext.class.getName() + ":servlet_response";
 
     /**
      * {@link PrincipalInfo}的key
      */
-    private static final String PRINCIPAL_INFO_KEY = DefaultAccessContext.class.getName() + ":principal_info";
+    public static final String PRINCIPAL_INFO_KEY = DefaultAccessContext.class.getName() + ":principal_info";
 
     /**
      * {@link SecurityManager}的key
      */
-    private static final String SECURITY_MANAGER_KEY = DefaultAccessContext.class.getName() + ":security_manager";
+    public static final String SECURITY_MANAGER_KEY = DefaultAccessContext.class.getName() + ":security_manager";
 
     /**
      * 当前登录成功的标识的key
      */
-    private static final String AUTHENTICATED_KEY = DefaultAccessContext.class.getName() + ":authenticated";
+    public static final String AUTHENTICATED_KEY = DefaultAccessContext.class.getName() + ":authenticated";
 
     /**
      * 当前登录用户主体在{@link Session}中存储的KEY

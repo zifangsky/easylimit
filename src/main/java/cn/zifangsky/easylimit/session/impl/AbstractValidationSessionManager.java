@@ -301,8 +301,8 @@ public abstract class AbstractValidationSessionManager extends AbstractSessionMa
                 try {
                     this.validate(temp, new DefaultSessionKey(temp.getId()));
                 } catch (InvalidSessionException e) {
-                    String msg = MessageFormat.format("Session with id [{0}] is invalid.", temp.getId());
-                    LOGGER.error(msg, e);
+                    String msg = MessageFormat.format("Session with id [{0}] has expired.", temp.getId());
+                    LOGGER.info(msg);
                 }
             }
         }

@@ -1,6 +1,8 @@
 package cn.zifangsky.easylimit;
 
 import cn.zifangsky.easylimit.access.Access;
+import cn.zifangsky.easylimit.access.AccessContext;
+import cn.zifangsky.easylimit.access.impl.ExposedTokenAccess;
 import cn.zifangsky.easylimit.access.impl.TokenAccessContext;
 import cn.zifangsky.easylimit.access.impl.TokenAccessFactory;
 import cn.zifangsky.easylimit.authc.PrincipalInfo;
@@ -61,7 +63,14 @@ public class TokenWebSecurityManager extends DefaultWebSecurityManager{
     public SimpleAccessRefreshToken refreshAccessToken(SimpleRefreshToken simpleRefreshToken, PrincipalInfo principalInfo, Session session){
         TokenWebSessionManager sessionManager = (TokenWebSessionManager) this.getSessionManager();
 
-        return sessionManager.refreshAccessToken(simpleRefreshToken, principalInfo, session);
+        //1. 刷新Access Token，并返回最新值
+        SimpleAccessRefreshToken newRefreshToken = sessionManager.refreshAccessToken(simpleRefreshToken, principalInfo, session);
+
+        //2. 在Session中保存Access Token和Refresh Token
+        this.saveTokenToSession(session, newRefreshToken.getAccessToken(), newRefreshToken.getRefreshToken());
+
+        //3. 返回
+        return newRefreshToken;
     }
 
     /**
@@ -117,13 +126,26 @@ public class TokenWebSecurityManager extends DefaultWebSecurityManager{
         SimpleAccessToken accessToken = sessionManager.createAccessToken(principalInfo, session);
         SimpleRefreshToken refreshToken = sessionManager.createRefreshToken(validatedInfo, accessToken);
 
-        //3. 判断是否需要踢出当前用户的旧会话，如果是则给旧会话添加一个“踢出”标识
+        //3. 在Session中保存Access Token和Refresh Token
+        this.saveTokenToSession(session, accessToken, refreshToken);
+
+        //4. 判断是否需要踢出当前用户的旧会话，如果是则给旧会话添加一个“踢出”标识
         if(this.isKickOutOldSessions()){
             this.kickOutOldSessions(access, principalInfo);
         }
 
-        //4. 重新创建Access
+        //5. 重新创建Access
         return this.createAccess(principalInfo, access, accessToken, refreshToken);
+    }
+
+    @Override
+    public void logout(Access access) {
+        //1. 停用Access Token和Refresh Token
+        ExposedTokenAccess tokenAccess = (ExposedTokenAccess) access;
+        this.stopToken(tokenAccess);
+
+        //2. 清除realm中的缓存，并停用session
+        super.logout(access);
     }
 
     /**
@@ -154,7 +176,55 @@ public class TokenWebSecurityManager extends DefaultWebSecurityManager{
     }
 
     @Override
+    protected void initializeBasicContextParams(AccessContext accessContext) {
+        super.initializeBasicContextParams(accessContext);
+
+        TokenAccessContext tokenAccessContext = (TokenAccessContext) accessContext;
+        this.setSimpleAccessTokenToContext(tokenAccessContext);
+        this.setSimpleRefreshTokenToContext(tokenAccessContext);
+    }
+
+    /**
+     * 向{@link TokenAccessContext}设置Access Token
+     */
+    protected void setSimpleAccessTokenToContext(TokenAccessContext accessContext) {
+        SimpleAccessToken accessToken = accessContext.acquireAccessToken();
+
+        if(accessToken != null){
+            accessContext.setSimpleAccessToken(accessToken);
+        }
+    }
+
+    /**
+     * 向{@link TokenAccessContext}设置Refresh Token
+     */
+    protected void setSimpleRefreshTokenToContext(TokenAccessContext accessContext) {
+        SimpleRefreshToken refreshToken = accessContext.acquireRefreshToken();
+
+        if(refreshToken != null){
+            accessContext.setSimpleRefreshToken(refreshToken);
+        }
+    }
+
+    /**
+     * 在登录和刷新Access Token后，将最新的Access Token和Refresh Token保存到{@link Session}
+     */
+    protected void saveTokenToSession(Session session,
+                                      SimpleAccessToken accessToken, SimpleRefreshToken refreshToken){
+        session.setAttribute(TokenAccessContext.SIMPLE_ACCESS_TOKEN_KEY, accessToken);
+        session.setAttribute(TokenAccessContext.SIMPLE_REFRESH_TOKEN_KEY, refreshToken);
+    }
+
+    @Override
     protected TokenAccessContext createAccessContext() {
         return new TokenAccessContext();
+    }
+
+    /**
+     * 停用Access Token和Refresh Token
+     */
+    protected void stopToken(ExposedTokenAccess tokenAccess){
+        TokenWebSessionManager sessionManager = (TokenWebSessionManager) this.getSessionManager();
+        sessionManager.stopToken(tokenAccess);
     }
 }

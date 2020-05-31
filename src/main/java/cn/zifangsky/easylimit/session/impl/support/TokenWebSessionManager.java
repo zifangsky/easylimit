@@ -1,5 +1,6 @@
 package cn.zifangsky.easylimit.session.impl.support;
 
+import cn.zifangsky.easylimit.access.impl.ExposedTokenAccess;
 import cn.zifangsky.easylimit.authc.PrincipalInfo;
 import cn.zifangsky.easylimit.authc.ValidatedInfo;
 import cn.zifangsky.easylimit.exception.token.ExpiredTokenException;
@@ -187,6 +188,25 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
         return new SimpleAccessRefreshToken(newAccessToken, simpleRefreshToken);
     }
 
+    /**
+     * 停用Access Token和Refresh Token
+     * @author zifangsky
+     * @date 2020/5/31 11:53
+     * @since 1.0.0
+     * @param tokenAccess tokenAccess
+     */
+    public void stopToken(ExposedTokenAccess tokenAccess){
+        SimpleAccessToken accessToken = tokenAccess.getAccessToken();
+        SimpleRefreshToken refreshToken = tokenAccess.getRefreshToken();
+
+        if(accessToken != null){
+            this.removeExpiredAccessToken(accessToken);
+        }
+        if(refreshToken != null){
+            this.removeExpiredRefreshToken(refreshToken);
+        }
+    }
+
     @Override
     protected void doStopped(Session session) {
         this.removeExpiredAccessToken(session);
@@ -348,9 +368,7 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
         SimpleAccessToken accessToken = (SimpleAccessToken) session.getAttribute(TokenSessionContext.SIMPLE_ACCESS_TOKEN_KEY);
 
         if(accessToken != null){
-            LOGGER.debug(MessageFormat.format("Access Token [{0}] has expired.", accessToken.getAccessToken()));
-            //2. 从DAO中删除
-            this.tokenDAO.deleteAccessToken(accessToken.getAccessToken());
+            this.removeExpiredAccessToken(accessToken);
         }
     }
 
@@ -358,16 +376,14 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
      * 移除过期的Access Token
      */
     protected void removeExpiredAccessToken(SimpleAccessToken accessToken){
-        LOGGER.debug(MessageFormat.format("Access Token [{0}] has expired.", accessToken.getAccessToken()));
-
-        this.tokenDAO.deleteAccessToken(accessToken.getAccessToken());
+        this.removeInvalidAccessToken(accessToken.getAccessToken());
     }
 
     /**
      * 移除失效的Access Token
      */
     protected void removeInvalidAccessToken(String accessToken){
-        LOGGER.debug(MessageFormat.format("Access Token [{0}] has invalid.", accessToken));
+        LOGGER.info(MessageFormat.format("Access Token [{0}] has invalid.", accessToken));
 
         this.tokenDAO.deleteAccessToken(accessToken);
     }
@@ -376,7 +392,7 @@ public class TokenWebSessionManager extends CookieWebSessionManager {
      * 移除过期的Refresh Token
      */
     protected void removeExpiredRefreshToken(SimpleRefreshToken refreshToken){
-        LOGGER.debug(MessageFormat.format("Refresh Token [{0}] has invalid.", refreshToken.getRefreshToken()));
+        LOGGER.info(MessageFormat.format("Refresh Token [{0}] has invalid.", refreshToken.getRefreshToken()));
 
         this.tokenDAO.deleteRefreshToken(refreshToken.getRefreshToken());
     }
