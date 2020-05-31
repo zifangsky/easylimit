@@ -16,7 +16,7 @@ public class Constants {
     /**
      * session校验的线程名
      */
-    public static final String SESSION_VALIDATION_THREAD_NAME = "THREAD_SESSION_VALIDATION";
+    public static final String SESSION_CHECK_THREAD_NAME = "session_check";
 
     /**
      * 默认sessionId在cookie中的名称
@@ -29,6 +29,11 @@ public class Constants {
     public static final String KICK_OUT_OLD_SESSIONS_NAME = PROJECT_NAME + "_kicked_out";
 
     /**
+     * “踢出”的URL参数名
+     */
+    public static final String KICK_OUT_OLD_SESSIONS_PARAM_NAME = "kicked_out";
+
+    /**
      * Ajax请求的Header
      */
     public static final String AJAX_REQUEST_HEADER = "XMLHttpRequest";
@@ -37,6 +42,11 @@ public class Constants {
      * 保存的请求来源的URL的参数名称
      */
     public static final String SAVED_SOURCE_URL_NAME = "saved_source_url";
+
+    /**
+     * 回调URL的参数名称
+     */
+    public static final String DEFAULT_REDIRECT_URL_NAME = "redirect_url";
 
     /**
      * 默认的登录URL

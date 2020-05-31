@@ -35,7 +35,7 @@ public abstract class AbstractPermissionRealm extends AbstractAuthenticationReal
 
     /**
      * 是否缓存{@link PermissionInfo}
-     * <p>Note: 一般都缓存角色、权限信息</p>
+     * <p>Note: 默认不缓存角色、权限信息，如设置成缓存则需要在修改角色/权限等接口中手动调用下面的{@link #doClearCache(PrincipalInfo)}方法</p>
      */
     private boolean enablePermissionInfoCache = false;
 
@@ -53,16 +53,10 @@ public abstract class AbstractPermissionRealm extends AbstractAuthenticationReal
         this(null, DEFAULT_PERMISSION_INFO_CACHE_NAME);
     }
 
-    /**
-     * Note: 建议缓存角色、权限信息
-     */
     public AbstractPermissionRealm(Cache<String, PermissionInfo> permissionInfoCache) {
         this(permissionInfoCache, DEFAULT_PERMISSION_INFO_CACHE_NAME);
     }
 
-    /**
-     * Note: 建议缓存角色、权限信息
-     */
     public AbstractPermissionRealm(Cache<String, PermissionInfo> permissionInfoCache, String permissionInfoCacheName) {
         super();
         if(permissionInfoCache != null){

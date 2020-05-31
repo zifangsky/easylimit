@@ -39,7 +39,7 @@ public abstract class AbstractVerifyFilter extends AbstractAccessControlFilter{
             if(access != null && !access.isAuthenticated()){
                 this.saveSourceUrlAndRedirectToLoginPage(request, response, null);
             }else{
-                this.doRedirect(request, response, this.unauthorizedUrl);
+                this.doRedirect(request, response, this.unauthorizedUrl, null);
             }
         }else{
             this.generateTokenResponse(response, this.unauthorizedRespMsg);

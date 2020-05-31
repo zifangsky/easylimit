@@ -21,31 +21,26 @@
         <!-- 打包时忽略测试代码 -->
         <skipTests>true</skipTests>
         <!-- JUnit单元测试 -->
-        <junit>4.12</junit>
+        <junit>4.13</junit>
         <!-- Apache Commons系列公共库 -->
-        <commons-lang3>3.8.1</commons-lang3>
-        <commons-io>2.6</commons-io>
-        <commons-codec>1.12</commons-codec>
-        <commons-text>1.6</commons-text>
-        <commons-beanutils>1.9.3</commons-beanutils>
+        <commons-lang3>3.10</commons-lang3>
+        <commons-beanutils>1.9.4</commons-beanutils>
         <!-- Apache HttpClient -->
-        <httpclient>4.5.7</httpclient>
-        <!-- Fastjson -->
-        <fastjson>1.2.60</fastjson>
+        <httpclient>4.5.12</httpclient>
         <!-- Jackson -->
-        <jackson>2.9.8</jackson>
+        <jackson>2.11.0</jackson>
         <!-- SLF4J -->
-        <slf4j>1.7.26</slf4j>
+        <slf4j>1.7.30</slf4j>
         <!-- AspectJ Weaver -->
-        <aspectjweaver>1.9.4</aspectjweaver>
+        <aspectjweaver>	1.9.5</aspectjweaver>
         <!-- Java Servlet API -->
         <javax.servlet-api>4.0.1</javax.servlet-api>
         <!-- Spring Web MVC -->
-        <spring>5.1.5.RELEASE</spring>
+        <spring>5.2.6.RELEASE</spring>
         <!-- Jedis -->
-        <jedis>3.0.1</jedis>
+        <jedis>3.3.0</jedis>
         <!-- Spring Data Redis -->
-        <spring-data-redis>2.1.6.RELEASE</spring-data-redis>
+        <spring-data-redis>2.3.0.RELEASE</spring-data-redis>
     </properties>
 
     <dependencies>
@@ -64,39 +59,16 @@
             <version>${commons-lang3}</version>
         </dependency>
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commons-io}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>${commons-codec}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-text</artifactId>
-            <version>${commons-text}</version>
-        </dependency>
-        <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>${commons-beanutils}</version>
         </dependency>
-
 
         <!-- Apache HttpClient -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${httpclient}</version>
-        </dependency>
-
-        <!-- Fastjson -->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson}</version>
         </dependency>
 
         <!-- Jackson对自动解析JSON和XML格式的支持 -->
@@ -147,11 +119,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
             <version>${spring}</version>
         </dependency>
 

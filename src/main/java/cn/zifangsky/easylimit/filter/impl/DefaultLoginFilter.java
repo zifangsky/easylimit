@@ -15,6 +15,8 @@ import cn.zifangsky.easylimit.utils.WebUtils;
 import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 默认的登录{@link Filter}
@@ -75,14 +77,14 @@ public class DefaultLoginFilter extends AbstractAccessControlFilter{
 
         //需要跳转页面的情况
         if(ProjectModeEnums.DEFAULT.equals(this.getProjectMode()) && !WebUtils.isAjaxRequest(request)){
-            String param = null;
+            Map<String, String> params = new HashMap<>(4);
 
             if(kickedOutFlag != null){
-                param = "?kickout=1";
+                params.put(Constants.KICK_OUT_OLD_SESSIONS_PARAM_NAME, "1");
             }
 
             //跳转到登录页面
-            this.saveSourceUrlAndRedirectToLoginPage(request, response, param);
+            this.saveSourceUrlAndRedirectToLoginPage(request, response, params);
         }
         //其他情况返回AJAX提示
         else{

@@ -90,7 +90,7 @@ public class WebUtils {
     /**
      * 获取RequestURL
      * <p>
-     *     假如请求URL为：<b>http://example.com:8080/demoapp/user/index </b>，
+     *     假如请求URL为：<b>http://example.com:8080/demoapp/user/index?name=admin</b>，
      *     其中<code>demoapp</code>为部署的应用名称
      * </p>
      * <p>最后返回的字符串是：<b>http://example.com:8080/demoapp/user/index</b></p>
@@ -107,9 +107,33 @@ public class WebUtils {
     }
 
     /**
+     * 获取完整URL
+     * <p>
+     *     假如请求URL为：<b>http://example.com:8080/demoapp/user/index?name=admin</b>，
+     *     其中<code>demoapp</code>为部署的应用名称
+     * </p>
+     * <p>最后返回的字符串是：<b>http://example.com:8080/demoapp/user/index?name=admin</b></p>
+     * @author zifangsky
+     * @date 2020/5/31 10:24
+     * @since 1.0.0
+     * @param request request
+     * @return java.lang.String
+     */
+    public static String getRequestFullURL(HttpServletRequest request) {
+        String requestURL = getRequestURL(request);
+        String queryString = request.getQueryString();
+
+        if(queryString == null){
+            return requestURL;
+        }else {
+            return requestURL + "?" + queryString;
+        }
+    }
+
+    /**
      * 获取ServletPath
      * <p>
-     *     假如请求URL为：<b>http://example.com:8080/demoapp/user/index </b>，
+     *     假如请求URL为：<b>http://example.com:8080/demoapp/user/index?name=admin</b>，
      *     其中<code>demoapp</code>为部署的应用名称
      * </p>
      * <p>最后返回的字符串是：<b>/user/index</b></p>
@@ -128,7 +152,7 @@ public class WebUtils {
     /**
      * 获取RequestURI
      * <p>
-     *     假如请求URL为：<b>http://example.com:8080/demoapp/user/index </b>，
+     *     假如请求URL为：<b>http://example.com:8080/demoapp/user/index?name=admin</b>，
      *     其中<code>demoapp</code>为部署的应用名称
      * </p>
      * <p>最后返回的字符串是：<b>/demoapp/user/index</b></p>
@@ -147,7 +171,7 @@ public class WebUtils {
     /**
      * 获取ContextPath
      * <p>
-     *     假如请求URL为：<b>http://example.com:8080/demoapp/user/index </b>，
+     *     假如请求URL为：<b>http://example.com:8080/demoapp/user/index?name=admin</b>，
      *     其中<code>demoapp</code>为部署的应用名称
      * </p>
      * <p>最后返回的字符串是：<b>/demoapp</b></p>
@@ -201,12 +225,13 @@ public class WebUtils {
         }
 
         //2. 给URL前面添加'/'
-        if (!result.startsWith("/")) {
+        if (!result.startsWith("http") && !result.startsWith("/")) {
             result = "/" + result;
         }
 
-        //3 去除多余的'/'
+        //3 去除多余的'/'（“http://”或者“https://”不去除）
         result = result.replaceAll("//", "/");
+        result = result.replaceFirst(":/", "://");
 
         //4. 去除'../'
         result = result.replaceAll("\\.\\./", "");
@@ -241,7 +266,7 @@ public class WebUtils {
      * @param params 请求参数
      */
     public static void executeRedirect(HttpServletRequest request, HttpServletResponse response, String redirectUrl, Map<String, String> params) throws IOException {
-        executeRedirect(request, response, redirectUrl, null, true);
+        executeRedirect(request, response, redirectUrl, params, true);
     }
 
     /**
@@ -315,13 +340,16 @@ public class WebUtils {
      * @since 1.0.0
      * @param request HttpServletRequest
      */
-    public static void saveSourceUrl(HttpServletRequest request){
-        String requestURL = getRequestURL(request);
+    public static String saveSourceUrl(HttpServletRequest request){
+        String requestFullURL = getRequestFullURL(request);
+
         Access access = SecurityUtils.getAccess();
         Session session = access.getSession();
 
         //在session中保存来源URL
-        session.setAttribute(Constants.SAVED_SOURCE_URL_NAME, requestURL);
+        session.setAttribute(Constants.SAVED_SOURCE_URL_NAME, requestFullURL);
+
+        return requestFullURL;
     }
 
     /**

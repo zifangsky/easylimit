@@ -74,7 +74,7 @@ public class DefaultSessionValidationScheduled implements SessionValidationSched
                 public Thread newThread(Runnable r) {
                     Thread thread = new Thread(r);
                     thread.setDaemon(true);
-                    thread.setName(Constants.SESSION_VALIDATION_THREAD_NAME);
+                    thread.setName(Constants.SESSION_CHECK_THREAD_NAME);
 
                     return thread;
                 }

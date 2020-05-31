@@ -34,4 +34,11 @@ public class DefaultSessionKey implements SessionKey, Serializable {
     public void setSessionId(Serializable sessionId) {
         this.sessionId = sessionId;
     }
+
+    @Override
+    public String toString() {
+        return "DefaultSessionKey{" +
+                "sessionId=" + sessionId +
+                '}';
+    }
 }

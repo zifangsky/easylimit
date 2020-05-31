@@ -33,7 +33,7 @@ public abstract class AbstractAuthenticationRealm implements Realm{
 
     /**
      * 是否缓存{@link PrincipalInfo}
-     * <p>Note: 一般不缓存用户主体信息</p>
+     * <p>Note: 默认不缓存用户主体信息，如设置成缓存则需要在修改用户信息等接口中手动调用下面的{@link #doClearCache(PrincipalInfo)}方法。</p>
      */
     private boolean enablePrincipalInfoCache = false;
 

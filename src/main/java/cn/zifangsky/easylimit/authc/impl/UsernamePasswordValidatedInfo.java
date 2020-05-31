@@ -78,7 +78,7 @@ public class UsernamePasswordValidatedInfo implements ValidatedInfo {
     public String toString() {
         return "UsernamePasswordValidatedInfo{" +
                 "username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", password='it doesn't show up here'" + '\'' +
                 ", encryptionType=" + encryptionType +
                 '}';
     }

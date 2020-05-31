@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Map;
 
 /**
  * 登录、角色、权限等业务功能的抽象{@link Filter}
@@ -114,8 +115,9 @@ public abstract class AbstractAdviceFilter extends AbstractOncePerRequestFilter{
     /**
      * 重定向
      */
-    protected void doRedirect(HttpServletRequest request, HttpServletResponse response, String redirectUrl) throws IOException {
-        WebUtils.executeRedirect(request, response, redirectUrl);
+    protected void doRedirect(HttpServletRequest request, HttpServletResponse response,
+                              String redirectUrl, Map<String, String> params) throws IOException {
+        WebUtils.executeRedirect(request, response, redirectUrl, params);
     }
 
     public ProjectModeEnums getProjectMode() {

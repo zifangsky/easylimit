@@ -73,10 +73,9 @@ public class SimplePrincipalInfo implements PrincipalInfo {
 
     @Override
     public String toString() {
-        return "CorrectAuthentication{" +
-                "principal=" + principal +
+        return "SimplePrincipalInfo{" +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", password='it doesn't show up here'" + '\'' +
                 '}';
     }
 }

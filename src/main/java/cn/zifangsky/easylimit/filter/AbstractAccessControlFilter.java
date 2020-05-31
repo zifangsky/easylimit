@@ -10,6 +10,8 @@ import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 访问控制相关的抽象{@link Filter}
@@ -70,24 +72,31 @@ public abstract class AbstractAccessControlFilter extends AbstractPathFilter{
      * <p>1. 保存来源URL</p>
      * <p>1. 重定向到登录页面</p>
      */
-    protected void saveSourceUrlAndRedirectToLoginPage(HttpServletRequest request, HttpServletResponse response, String param) throws IOException {
-        this.saveSourceUrl(request);
-        this.redirectToLoginPage(request, response, param);
+    protected void saveSourceUrlAndRedirectToLoginPage(HttpServletRequest request, HttpServletResponse response,
+                                                       Map<String, String> params) throws IOException {
+        String sourceUrl = this.saveSourceUrl(request);
+
+        if(params == null){
+            params = new HashMap<>(4);
+        }
+        params.put(Constants.DEFAULT_REDIRECT_URL_NAME, sourceUrl);
+
+        this.redirectToLoginPage(request, response, params);
     }
 
     /**
      * 保存来源URL，目的是方便登录成功之后跳转回去
      */
-    protected void saveSourceUrl(HttpServletRequest request){
-        WebUtils.saveSourceUrl(request);
+    protected String saveSourceUrl(HttpServletRequest request){
+        return WebUtils.saveSourceUrl(request);
     }
 
     /**
      * 重定向到登录页面
      */
-    protected void redirectToLoginPage(HttpServletRequest request, HttpServletResponse response, String param) throws IOException {
-        String resultUrl = (param != null ? (this.loginUrl + param) : this.loginUrl);
-        this.doRedirect(request, response, resultUrl);
+    protected void redirectToLoginPage(HttpServletRequest request, HttpServletResponse response,
+                                       Map<String, String> params) throws IOException {
+        this.doRedirect(request, response, this.loginUrl, params);
     }
 
     protected Access getAccess(HttpServletRequest request, HttpServletResponse response){

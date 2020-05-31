@@ -1,8 +1,8 @@
 package cn.zifangsky.easylimit.filter;
 
 import cn.zifangsky.easylimit.filter.impl.support.TokenRespMsg;
-import cn.zifangsky.easylimit.utils.JsonUtils;
 import cn.zifangsky.easylimit.utils.WebUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -78,6 +78,7 @@ public abstract class AbstractOncePerRequestFilter extends AbstractFilter{
         result.put("name", tokenRespMsg.getName());
         result.put("msg", tokenRespMsg.getMsg());
 
-        response.getWriter().write(JsonUtils.toJson(result));
+        ObjectMapper mapper = new ObjectMapper();
+        response.getWriter().write(mapper.writeValueAsString(result));
     }
 }
