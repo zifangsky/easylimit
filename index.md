@@ -4,7 +4,7 @@
 
 ## 功能特性 ##
 
-在使用上，`easylimit`需要依赖`spring-webmvc`和`spring-context`，然后主要提供了以下功能特性：
+在使用上，目前主要提供了以下功能特性：
 
 - 同时支持`MVC`和`前后端分离`项目开发模式的权限控制
 - 支持完整的`RBAC`权限控制
@@ -19,7 +19,7 @@
 
 ## 鸣谢 ##
 
-前几年的时候，我很喜欢`Apache Shiro`这个权限控制框架，不过后面慢慢地`Shiro`不再满足项目开发的实际需求，从而让我萌生了自己动手开发一个权限控制框架的想法。不过在`easylimit`这个框架的早期开发阶段，我参考了很多`Shiro`的设计理念以及源码实现，因此我在此对`Apache Shiro`开发组及社区表示由衷的感谢！
+前几年的时候，我很喜欢`Apache Shiro`这个权限控制框架，不过后面慢慢地`Shiro`不再满足项目开发的实际需求，从而让我萌生了自己动手开发一个权限控制框架的想法。不过在`easylimit`这个框架的早期开发阶段，我参考了很多`Shiro`的设计理念以及源码实现，因此我在此表示对`Apache Shiro`开发组及社区由衷的感谢！
 
 - Apache Shiro官网：[https://shiro.apache.org/](https://shiro.apache.org/)
 - Apache Shiro源码：[https://github.com/apache/shiro](https://github.com/apache/shiro)
