@@ -6,7 +6,7 @@
 <dependency>
     <groupId>cn.zifangsky</groupId>
     <artifactId>easylimit</artifactId>
-    <version>${easylimit}</version>
+    <version>1.0.0-RELEASE</version>
 </dependency>
 ```
 
