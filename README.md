@@ -21,18 +21,21 @@
 
 ## 开始使用 ##
 
-使用方式及详细说明可以查看这个文档：[https://easylimit.zifangsky.cn/](https://easylimit.zifangsky.cn/)
+使用方式及详细说明可以查看这个文档站点：[https://easylimit.zifangsky.cn/](https://easylimit.zifangsky.cn/)
 
 
 
 ## 鸣谢 ##
 
-前几年的时候，我很喜欢`Apache Shiro`这个权限控制框架，不过后面慢慢地`Shiro`不再满足项目开发的实际需求，从而让我萌生了自己动手开发一个权限控制框架的想法。不过在`easylimit`这个框架的早期开发阶段，我参考了很多`Shiro`的设计理念以及源码实现，因此我在此表示对`Apache Shiro`开发组及社区由衷的感谢！
+前几年的时候，我很喜欢`Apache Shiro`这个权限控制框架，不过后面慢慢地`Shiro`不再满足项目开发的实际需求，从而让我萌生了自己动手开发一个权限控制框架的想法。不过在`easylimit`这个框架的早期开发阶段，我参考了很多`Shiro`的设计理念以及源码实现，在此我表示对`Apache Shiro`开发组及其社区由衷的感谢！
 
 - Apache Shiro官网：[https://shiro.apache.org/](https://shiro.apache.org/)
 - Apache Shiro源码：[https://github.com/apache/shiro](https://github.com/apache/shiro)
 
 
 
-最后，我在设计基于`前后端分离`项目开发模式的权限控制时，也借鉴了一些`JSON Web Token (JWT) `的设计思想，在此也表示感谢！
+此外，我在设计基于`前后端分离`项目开发模式的权限控制时，也借鉴了一些`JSON Web Token (JWT) `的设计思想，在此也表示感谢！
 
+## 最后 ##
+
+欢迎大家积极使用这个框架，同时我也希望这个框架可以真正帮助到大家。如果大家在使用过程中有什么疑问或者好的建议，可以在项目中提 [Issue](https://github.com/zifangsky/easylimit/issues)，也可以加这个Q群（**590424939**）跟我即时交流。
