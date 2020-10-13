@@ -49,7 +49,7 @@
         <!-- 打包时忽略测试代码 -->
         <skipTests>true</skipTests>
         <!-- JUnit单元测试 -->
-        <junit>4.13</junit>
+        <junit>4.13.1</junit>
         <!-- Apache Commons系列公共库 -->
         <commons-lang3>3.10</commons-lang3>
         <commons-beanutils>1.9.4</commons-beanutils>
