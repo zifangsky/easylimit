@@ -144,7 +144,7 @@ public class DefaultMemoryCache implements Cache<Serializable, Object> {
         ConcurrentHashMap<Serializable, Object> dataMap = memoryCacheMap.get(cacheName);
 
         if(dataMap == null){
-            dataMap = new ConcurrentHashMap<>();
+            dataMap = new ConcurrentHashMap<>(16);
             memoryCacheMap.put(cacheName, dataMap);
         }
 

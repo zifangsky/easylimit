@@ -14,7 +14,9 @@ import javax.servlet.http.HttpServletResponse;
  * @since 1.0.0
  */
 public class CookieUtils {
-    // cookie的有效期默认为30天
+    /**
+     * cookie的有效期默认为30天
+     */
     public final static int COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
 
     /**

@@ -39,7 +39,7 @@ public class ThreadContext {
      */
     private static void initialize() {
         if (RESOURCES.get() == null) {
-            RESOURCES.set(new HashMap<>());
+            RESOURCES.set(new HashMap<>(16));
         }
     }
 
@@ -52,7 +52,7 @@ public class ThreadContext {
      * @since 1.0.0
      */
     public static Map<String, Object> getResources() {
-        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>(16);
 
         Map<String, Object> resources = RESOURCES.get();
         if (resources != null && resources.size() > 0) {

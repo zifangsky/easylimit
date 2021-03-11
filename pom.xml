@@ -48,36 +48,48 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <!-- 打包时忽略测试代码 -->
         <skipTests>true</skipTests>
-        <!-- JUnit单元测试 -->
-        <junit>4.13</junit>
+        <!-- JUnit Jupiter API -->
+        <junit-jupiter>5.7.1</junit-jupiter>
         <!-- Apache Commons系列公共库 -->
-        <commons-lang3>3.10</commons-lang3>
+        <commons-lang3>3.11</commons-lang3>
         <commons-beanutils>1.9.4</commons-beanutils>
         <!-- Apache HttpClient -->
-        <httpclient>4.5.12</httpclient>
+        <httpclient>4.5.13</httpclient>
         <!-- Jackson -->
-        <jackson>2.11.0</jackson>
+        <jackson>2.12.1</jackson>
         <!-- SLF4J -->
         <slf4j>1.7.30</slf4j>
         <!-- AspectJ Weaver -->
-        <aspectjweaver>	1.9.5</aspectjweaver>
+        <aspectjweaver>	1.9.6</aspectjweaver>
         <!-- Java Servlet API -->
         <javax.servlet-api>4.0.1</javax.servlet-api>
         <!-- Spring Web MVC -->
-        <spring>5.2.6.RELEASE</spring>
+        <spring>5.2.13.RELEASE</spring>
         <!-- Jedis -->
-        <jedis>3.3.0</jedis>
+        <jedis>	3.5.1</jedis>
         <!-- Spring Data Redis -->
-        <spring-data-redis>2.3.0.RELEASE</spring-data-redis>
+        <spring-data-redis>2.3.7.RELEASE</spring-data-redis>
     </properties>
 
     <dependencies>
-        <!-- Junit -->
+        <!-- JUnit Jupiter API -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit}</version>
-            <scope>test</scope>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${junit-jupiter}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>hamcrest-core</artifactId>
+                    <groupId>org.hamcrest</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Commons -->
