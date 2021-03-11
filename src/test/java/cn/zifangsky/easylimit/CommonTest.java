@@ -2,7 +2,7 @@ package cn.zifangsky.easylimit;
 
 import cn.zifangsky.easylimit.session.impl.DefaultSessionContext;
 import cn.zifangsky.easylimit.utils.AntPathMatcher;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,9 +12,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2019/3/25
  * @since 1.0.0
  */
+@DisplayName("基本测试")
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CommonTest {
 
     @Test
+    @Order(1)
+    @DisplayName("DefaultSessionContext")
     public void test1(){
         String key = DefaultSessionContext.class.getName() + ":HOST";
 
@@ -25,6 +29,8 @@ public class CommonTest {
     }
 
     @Test
+    @Order(2)
+    @DisplayName("ConcurrentHashMap")
     public void test2(){
         ConcurrentHashMap<String, Object> map = new ConcurrentHashMap<>();
         map.put("112", "aaa");
@@ -35,6 +41,8 @@ public class CommonTest {
     }
 
     @Test
+    @Order(3)
+    @DisplayName("ConcurrentHashMap")
     public void test3(){
         ConcurrentHashMap<String, ConcurrentHashMap<String, Object>> cacheMap = new ConcurrentHashMap<>(16);
 
@@ -51,6 +59,8 @@ public class CommonTest {
     }
 
     @Test
+    @Order(4)
+    @DisplayName("解析URL")
     public void test4(){
         String redirectUrl = "http://example.com/test/aaa?id=5#point";
 
@@ -65,6 +75,8 @@ public class CommonTest {
     }
 
     @Test
+    @Order(5)
+    @DisplayName("匹配URL")
     public void test5(){
         AntPathMatcher pathMatcher = new AntPathMatcher();
 
