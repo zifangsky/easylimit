@@ -64,7 +64,7 @@
         <!-- Java Servlet API -->
         <javax.servlet-api>4.0.1</javax.servlet-api>
         <!-- Spring Web MVC -->
-        <spring>5.2.13.RELEASE</spring>
+        <spring>5.2.20.RELEASE</spring>
         <!-- Jedis -->
         <jedis>	3.5.1</jedis>
         <!-- Spring Data Redis -->
